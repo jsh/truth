@@ -12,19 +12,20 @@ from parse_args import get_args, parse_span, truth
 
 
 def test_truth():
+    """executing truth() succeeds"""
     truthpath = truth()
     assert os.system(truthpath) == 0
 
 
 def test_get_args_defaults():
     """get_args defaults"""
-    parser = get_args("Testing wild_type")
+    parser = get_args("Testing default wild_type")
     assert parser.wild_type == truth()
 
 
 def test_bit():
-    """get_args understands --verbose"""
-    parser = get_args("Testing verbose", ["--bit=69"])
+    """get_args understands --bit"""
+    parser = get_args("Testing bit", ["--bit=69"])
     assert parser.start == 69
 
 
