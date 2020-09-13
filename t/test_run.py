@@ -18,22 +18,21 @@ BADPATH = "/u/jane/me/tarzan"
 
 def test_run_test_true():
     """simple success"""
-    assert (0, "success", "", "") == run(str(which("true")))
+    expected = (0, "success", "", "")
+    assert run(str(which("true"))) == expected
 
 
 def test_run_test_false():
     """simple failure"""
-    assert (1, "calledprocesserror", "", "") == run(str(which("false")))
+    expected = (1, "calledprocesserror", "", "")
+    assert run(str(which("false"))) == expected
 
 
 def test_run_success():
     """successful run produces expected results"""
     today = datetime.date.today().strftime("%F\n")
-    returncode, outcome, out, err = run("date +%F")
-    assert returncode == 0
-    assert outcome == "success"
-    assert out == today
-    assert not err
+    expected = (0, "success", today, '')
+    assert run("date +%F") == expected
 
 
 def test_run_fail():
