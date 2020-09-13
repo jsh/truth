@@ -5,23 +5,25 @@ import datetime
 
 try:
     from run import run
+    from utils import which
 except ImportError:
     import sys
 
     sys.path.append(".")
     from run import run
+    from utils import which
 
 BADPATH = "/u/jane/me/tarzan"
 
 
 def test_run_test_true():
     """simple success"""
-    assert (0, "success", "", "") == run("true")
+    assert (0, "success", "", "") == run(str(which("true")))
 
 
 def test_run_test_false():
     """simple failure"""
-    assert (1, "calledprocesserror", "", "") == run("false")
+    assert (1, "calledprocesserror", "", "") == run(str(which("false")))
 
 
 def test_run_success():
