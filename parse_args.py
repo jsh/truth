@@ -9,13 +9,15 @@ from pathlib import Path
 
 def truth():
     """An important default.
-    :returns: Path to truth
+    :returns: absoute Path to truth
     :rtype: pathlib.Path
     """
-    true = Path("true")
-    if not Path("/bin" / true).is_file():
-        true = Path("/usr/bin" / true)
-    return true
+    reltruth = Path("bin/true")
+    abstruth = "/" / reltruth
+    if not abstruth.is_file():
+        abstruth = "/usr" / reltruth
+    assert abstruth.is_file()
+    return abstruth
 
 
 def get_args(description, args=None):
