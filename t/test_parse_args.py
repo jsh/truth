@@ -8,7 +8,11 @@ import sys
 
 import pytest
 
-from parse_args import get_args, parse_span, truth
+try:
+    from parse_args import get_args, parse_span, truth
+except ImportError:
+    sys.path.append(".")
+    from parse_args import get_args, parse_span, truth
 
 
 def test_truth():
