@@ -40,9 +40,9 @@ def test_run_fail():
         1,
         "calledprocesserror",
         "",
-        "ls: {}: No such file or directory\n".format(BADPATH),
+        f"ls: {BADPATH}: No such file or directory\n",
     )
-    assert run("ls {}".format(BADPATH)) == expected
+    assert run(f"ls {BADPATH}") == expected
 
 
 def test_run_badpath():
@@ -51,7 +51,7 @@ def test_run_badpath():
         2,
         "filenotfounderror",
         None,
-        "[Errno 2] No such file or directory: '{0}': '{0}'".format(BADPATH),
+        f"[Errno 2] No such file or directory: '{BADPATH}': '{BADPATH}'",
     )
     assert run(BADPATH) == expected
 

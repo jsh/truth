@@ -57,7 +57,7 @@ class Zoon:
 
     def __repr__(self):
         """return something that looks just like the object."""
-        return "zoon.Zoon('{}', fromfile={})".format(self._initializer, self._fromfile)
+        return f"zoon.Zoon('{self._initializer}', fromfile={self._fromfile})"
 
     def write(self, filename):
         """Write Zoon to file.

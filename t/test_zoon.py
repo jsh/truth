@@ -28,7 +28,7 @@ TRUE = "/usr/bin/true"
 def test_init_from_file():
     """__init__() works correctly from string"""
     zoon = Zoon(TRUE)
-    assert "%r" % zoon == "zoon.Zoon('{}', fromfile=True)".format(TRUE)
+    assert "%r" % zoon == f"zoon.Zoon('{TRUE}', fromfile=True)"
 
 
 def test_init_from_string():

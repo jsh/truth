@@ -32,7 +32,7 @@ def get_args(description, args=None):
 
     args = parser.parse_args(args)
 
-    assert Path(args.wild_type).is_file(), "No file {}".format(args.wild_type)
+    assert Path(args.wild_type).is_file(), f"No file {args.wild_type}"
     args.size = Path(args.wild_type).stat().st_size * 8
     args.start, args.end = parse_span(args.bit)
     if args.end == sys.maxsize:
