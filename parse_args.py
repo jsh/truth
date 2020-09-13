@@ -3,21 +3,21 @@
 
 import argparse
 import re
+import subprocess
 import sys
 from pathlib import Path
 
 
-def truth():
+def which(command):
     """An important default.
-    :returns: absoute Path to truth
+    :returns: Path to command
     :rtype: pathlib.Path
     """
-    reltruth = Path("bin/true")
-    abstruth = "/" / reltruth
-    if not abstruth.is_file():
-        abstruth = "/usr" / reltruth
-    assert abstruth.is_file()
-    return abstruth
+    return Path(
+        subprocess.check_output(
+            f"which {command}", shell=True, universal_newlines=True
+        ).strip()
+    )
 
 
 def get_args(description, args=None):
@@ -29,7 +29,9 @@ def get_args(description, args=None):
 
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("--bit", help="bit(s) of interest")
-    parser.add_argument("--wild_type", default=truth(), help="un-mutated executable")
+    parser.add_argument(
+        "--wild_type", default=which("true"), help="un-mutated executable"
+    )
     parser.add_argument("--verbose", help="be extra chatty", action="store_true")
 
     args = parser.parse_args(args)
