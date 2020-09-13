@@ -3,21 +3,10 @@
 
 import argparse
 import re
-import subprocess
 import sys
 from pathlib import Path
 
-
-def which(command):
-    """An important default.
-    :returns: Path to command
-    :rtype: pathlib.Path
-    """
-    return Path(
-        subprocess.check_output(
-            f"which {command}", shell=True, universal_newlines=True
-        ).strip()
-    )
+from utils import which
 
 
 def get_args(description, args=None):

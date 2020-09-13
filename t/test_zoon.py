@@ -6,12 +6,12 @@ from pathlib import Path
 import pytest
 
 try:
-    from utils import to_bytes
+    from utils import to_bytes, which
 except ImportError:
     import sys
 
     sys.path.append(".")
-    from utils import to_bytes
+    from utils import to_bytes, which
 
 try:
     from zoon import Zoon
@@ -22,7 +22,7 @@ except ImportError:
     from zoon import Zoon
 
 
-TRUE = "/usr/bin/true"
+TRUE = which("true")
 
 
 def test_init_from_file():

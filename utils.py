@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Miscellaneous utility routines."""
 
+import subprocess
+from pathlib import Path
+
 
 def to_bytes(binary_string):
     """Change a string, like "00000011" to a bytestring
@@ -28,6 +31,18 @@ def toggle_bit_in_byte(offset, byte):
     assert 0 <= byte < 256
     mask = 1 << offset
     return byte ^ mask
+
+
+def which(command):
+    """An important default.
+    :returns: Path to command
+    :rtype: pathlib.Path
+    """
+    return Path(
+        subprocess.check_output(
+            f"which {command}", shell=True, universal_newlines=True
+        ).strip()
+    )
 
 
 def valid_slice(start, stop, out_of_bounds):
