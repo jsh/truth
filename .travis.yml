@@ -1,6 +1,5 @@
 language: python
     - "3.7"
-    dist: xenial
 before_install:
     - python --version
     - pip3 install -U pip
