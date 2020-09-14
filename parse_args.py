@@ -5,13 +5,15 @@ import argparse
 import re
 import sys
 from pathlib import Path
+from typing import Tuple
 
 from utils import which
 
 
-def get_args(description, args=None):
+def get_args(description: str, args: list = None) -> argparse.Namespace:
     """Parse the args
     :param str description: description message for executable
+    :param list or None args: the argument list to parse
     :returns: the args, massaged and sanity-checked
     :rtype: argparse.Namespace
     """
@@ -23,17 +25,17 @@ def get_args(description, args=None):
     )
     parser.add_argument("--verbose", help="be extra chatty", action="store_true")
 
-    args = parser.parse_args(args)
+    parsed_args = parser.parse_args(args)
 
-    assert Path(args.wild_type).is_file(), f"No file {args.wild_type}"
-    args.size = Path(args.wild_type).stat().st_size * 8
-    args.start, args.end = parse_span(args.bit)
-    if args.end == sys.maxsize:
-        args.end = args.size
-    return args
+    assert Path(parsed_args.wild_type).is_file(), f"No file {parsed_args.wild_type}"
+    parsed_args.size = Path(parsed_args.wild_type).stat().st_size * 8
+    parsed_args.start, parsed_args.end = parse_span(parsed_args.bit)
+    if parsed_args.end == sys.maxsize:
+        parsed_args.end = parsed_args.size
+    return parsed_args
 
 
-def parse_span(bit):
+def parse_span(bit: str) -> Tuple[int, int]:
     """parse a span
     :param str bit: range specified
     :returns: beginning and end of span
@@ -42,15 +44,15 @@ def parse_span(bit):
     span = r"(\d*):(\d*)"
     if not bit:
         bit = "0:"  # the entire sequence
-    if re.fullmatch(span, bit):
-        # pull apart start and end
-        match = re.fullmatch(span, bit)
-        start = match.group(1)
-        if not start:
-            start = "0"
-        start = int(start)
-        end = match.group(2)
-        end = int(end) if end else sys.maxsize
+    match = re.fullmatch(span, bit)
+    if match:
+        # pull apart "left:right", turn into start and end of range
+        left = match.group(1)
+        if not left:
+            left = "0"
+        start = int(left)
+        right = match.group(2)
+        end = int(right) if right else sys.maxsize
     elif re.fullmatch(r"\d*", bit):
         start, end = (int(bit), int(bit) + 1)
     else:

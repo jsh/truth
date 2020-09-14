@@ -31,7 +31,7 @@ def test_run_test_false():
 def test_run_success():
     """successful run produces expected results"""
     today = datetime.date.today().strftime("%F\n")
-    expected = (0, "success", today, '')
+    expected = (0, "success", today, "")
     assert run("date +%F") == expected
 
 
@@ -51,7 +51,7 @@ def test_run_badpath():
     expected = (
         2,
         "filenotfounderror",
-        None,
+        "",
         f"[Errno 2] No such file or directory: '{BADPATH}': '{BADPATH}'",
     )
     assert run(BADPATH) == expected

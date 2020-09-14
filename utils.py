@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """Miscellaneous utility routines."""
 
+import pathlib
 import subprocess
 from pathlib import Path
 
 
-def to_bytes(binary_string):
+def to_bytes(binary_string: str) -> bytes:
     """Change a string, like "00000011" to a bytestring
     :param str binary_string: The string
     :returns: The bytestring
@@ -23,9 +24,12 @@ def to_bytes(binary_string):
     return binary_int.to_bytes(size, byteorder="big")
 
 
-def toggle_bit_in_byte(offset, byte):
+def toggle_bit_in_byte(offset: int, byte: int) -> int:
     """toggle a bit in a byte, from https://wiki.python.org/moin/BitManipulation
-
+    :param int offset: the offest in the byte to toggle
+    :param int byte: the byte
+    :return: the new byte
+    :rtype: int
     """
     assert 0 <= offset < 8
     assert 0 <= byte < 256
@@ -33,7 +37,7 @@ def toggle_bit_in_byte(offset, byte):
     return byte ^ mask
 
 
-def which(command):
+def which(command: str) -> pathlib.Path:
     """An important default.
     :returns: Path to command
     :rtype: pathlib.Path
@@ -45,12 +49,12 @@ def which(command):
     )
 
 
-def valid_slice(start, stop, out_of_bounds):
+def valid_slice(start: int, stop: int, out_of_bounds: int) -> slice:
     """Valid slice of a Zoon.
     create a valid slice [start, stop)
     :param int start: the start of the slice
     :param int stop: the stop of the slice
-    :param int stop_max: upper limit for stop
+    :param int out_of_bounds: upper limit for stop
     :returns: valid slice
     :rtype: slice
     """

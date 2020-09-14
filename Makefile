@@ -4,7 +4,7 @@ SOURCES=$(wildcard *.py t/*.py)
 
 all: lint test
 
-lint: black pylint pylama
+lint: black mypy pylint pylama
 
 black: isort
 	black -q ${SOURCES}
@@ -14,6 +14,9 @@ fixme:
 
 isort:
 	isort ${SOURCES}
+
+mypy:
+	mypy ${PWD}
 
 pylama:
 	pylama ${SOURCES}

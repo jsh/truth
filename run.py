@@ -3,12 +3,15 @@
 
 import shlex
 import subprocess
+from typing import Tuple
 
 
-def run(command, timeout=1):
+def run(command: str, timeout: int = 1) -> Tuple[int, str, str, str]:
     """Run the command and record the result.
     :param str command:
     :param int timeout: # timeout
+    :returns: result of the run
+    :rtype: tuple(int, str, str, str)
     """
 
     cmd = shlex.split(command)
@@ -24,12 +27,12 @@ def run(command, timeout=1):
     except FileNotFoundError as exc:
         returncode = 2
         outcome = "filenotfounderror"
-        out = None
+        out = ""
         err = str(exc)
     except PermissionError as exc:
         returncode = 126
         outcome = "permissionerror"
-        out = None
+        out = ""
         err = str(exc)
     except subprocess.CalledProcessError as exc:
         returncode = exc.returncode
@@ -39,7 +42,7 @@ def run(command, timeout=1):
     except OSError as exc:
         returncode = -2
         outcome = "oserror"
-        out = None
+        out = ""
         err = str(exc)
     except subprocess.TimeoutExpired as exc:
         returncode = 124
@@ -49,6 +52,6 @@ def run(command, timeout=1):
     except Exception as exc:  # some other misfortune
         returncode = -1
         outcome = "exception"
-        out = None
+        out = ""
         err = str(exc)
     return (returncode, outcome, out, err)
