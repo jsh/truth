@@ -48,8 +48,8 @@ def run(command: str, timeout: int = 1) -> Tuple[int, str, str, str]:
     except subprocess.TimeoutExpired as exc:
         returncode = 124
         outcome = "timeoutexpired"
-        out = exc.stdout
-        err = exc.stderr
+        out = ""
+        err = ""
     except Exception as exc:  # some other misfortune
         returncode = -1
         outcome = "exception"
