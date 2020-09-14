@@ -3,6 +3,7 @@
 
 import shlex
 import subprocess
+from subprocess import PIPE
 from typing import Tuple
 
 
@@ -18,7 +19,7 @@ def run(command: str, timeout: int = 1) -> Tuple[int, str, str, str]:
 
     try:
         output = subprocess.run(
-            cmd, timeout=timeout, capture_output=True, text=True, check=True
+            cmd, timeout=timeout, stdout=PIPE, stderr=PIPE, universal_newlines=True, check=True
         )
         returncode = output.returncode
         outcome = "success"
