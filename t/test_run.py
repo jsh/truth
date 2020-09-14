@@ -8,8 +8,6 @@ try:
     from run import run
     from utils import which
 except ImportError:
-    import sys
-
     sys.path.append(".")
     from run import run
     from utils import which
@@ -38,21 +36,21 @@ def test_run_success():
 
 def test_run_fail():
     """unsuccessful run produces calledprocesserror"""
-    platform = sys.platform
+    observed = run(f"ls {BADPATH}")
+
     # TODO: this should, perhaps, be a table somewhere
+    platform = sys.platform
+    assert platform in {
+        "darwin",
+        "linux",
+    }, "Platform {platform} must be 'darwin' or 'linux'"
+
     if platform == "darwin":
-        returncode = 1
+        assert observed[0] == 1
     elif platform == "linux":
-        returncode = 2
-    else:
-        assert False, "Platform {platform} must be 'darwin' or 'linux'"
-    expected = (
-        returncode,
-        "calledprocesserror",
-        "",
-        f"ls: {BADPATH}: No such file or directory\n",
-    )
-    assert run(f"ls {BADPATH}") == expected
+        assert observed[0] == 2
+    assert observed[1:3] == ("calledprocesserror", "")
+    assert f"ls: {BADPATH}: No such file or directory\n" in observed[3]
 
 
 def test_run_badpath():

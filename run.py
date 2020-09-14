@@ -19,7 +19,12 @@ def run(command: str, timeout: int = 1) -> Tuple[int, str, str, str]:
 
     try:
         output = subprocess.run(
-            cmd, timeout=timeout, stdout=PIPE, stderr=PIPE, universal_newlines=True, check=True
+            cmd,
+            timeout=timeout,
+            stdout=PIPE,
+            stderr=PIPE,
+            universal_newlines=True,
+            check=True,
         )
         returncode = output.returncode
         outcome = "success"
@@ -45,7 +50,7 @@ def run(command: str, timeout: int = 1) -> Tuple[int, str, str, str]:
         outcome = "oserror"
         out = ""
         err = str(exc)
-    except subprocess.TimeoutExpired as exc:
+    except subprocess.TimeoutExpired:
         returncode = 124
         outcome = "timeoutexpired"
         out = ""
