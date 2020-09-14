@@ -2,6 +2,7 @@
 """Test utils module."""
 
 import datetime
+import sys
 
 try:
     from run import run
@@ -37,8 +38,16 @@ def test_run_success():
 
 def test_run_fail():
     """unsuccessful run produces calledprocesserror"""
+    platform = sys.platform
+    # TODO: this should, perhaps, be a table somewhere
+    if platform == "darwin":
+        returncode = 1
+    elif platform == "linux":
+        returncode = 2
+    else:
+        assert False, "Platform {platform} must be 'darwin' or 'linux'"
     expected = (
-        1,
+        returncode,
         "calledprocesserror",
         "",
         f"ls: {BADPATH}: No such file or directory\n",
@@ -59,7 +68,7 @@ def test_run_badpath():
 
 def test_run_timeout():
     """timeout produces timeoutexpired"""
-    expected = (124, "timeoutexpired", None, None)
+    expected = (124, "timeoutexpired", "", "")
     assert run("sleep 2") == expected
 
 
