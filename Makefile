@@ -9,6 +9,9 @@ lint: black mypy pylint pylama
 black: isort
 	black -q ${SOURCES}
 
+clean:
+	git clean -dfx --exclude=output
+
 fixme:
 	pylint -rn ${SOURCES} | sort -t: -k2 -n -r
 
@@ -28,4 +31,4 @@ test:
 	pytest
 
 
-.PHONY: all black fixme lint pylint pylama isort test
+.PHONY: all black clean fixme lint mypy pylint pylama isort test
