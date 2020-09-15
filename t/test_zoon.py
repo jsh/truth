@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Test zoon module."""
+# TODO: test a command with an arg.
 
 from pathlib import Path
 

@@ -93,12 +93,12 @@ class Zoon:
         assert timeout > 0
         output_dir = Path("bin")
         output_dir.mkdir(exist_ok=True)
-        mutant = (
+        mutant_path = (
             output_dir / "mutant"
         )  # could be a tempfile, but it's useful to keep the last one
-        self.write(mutant)
-        mutant.chmod(0o755)
-        command = "%s %s" % (mutant, args) if args else "mutant"
+        self.write(mutant_path)
+        mutant_path.chmod(0o755)
+        command = "%s %s" % (mutant_path, args) if args else str(mutant_path)
         return run.run(command, timeout=timeout)
 
     # nothing below this implemented
