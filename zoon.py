@@ -60,7 +60,7 @@ class Zoon:
         """return something that looks just like the object."""
         return f"zoon.Zoon('{self._initializer}', fromfile={self._fromfile})"
 
-    def write(self, filename: str):
+    def write(self, filename: Path):
         """Write Zoon to file.
         :param str filename: The name of the file to write.
         """
@@ -91,11 +91,12 @@ class Zoon:
         run for timeout seconds, max
         """
         assert timeout > 0
-        mutant = Path(
-            "mutant"
+        output_dir = Path("bin")
+        output_dir.mkdir(exist_ok=True)
+        mutant = (
+            output_dir / "mutant"
         )  # could be a tempfile, but it's useful to keep the last one
-        with open(mutant, "w+b") as fout:
-            self._bytes.tofile(fout)
+        self.write(mutant)
         mutant.chmod(0o755)
         command = "%s %s" % (mutant, args) if args else "mutant"
         return run.run(command, timeout=timeout)
