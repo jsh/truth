@@ -50,7 +50,7 @@ def test_run_fail():
     elif platform == "linux":
         assert observed[0] == 2
     assert observed[1:3] == ("calledprocesserror", "")
-    assert f"No such file or directory\n" in observed[3]
+    assert "No such file or directory\n" in observed[3]
 
 
 def test_run_badpath():
