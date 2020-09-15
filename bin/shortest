@@ -1,0 +1,21 @@
+#!/bin/bash
+# list the shortest executables
+
+set -e                             # exit on error
+set -u                             # catch typos
+set -o pipefail                    # catch any failure in a pipeline
+
+shortest(){
+  # TODO: replace '/Mach/' with a portable selector
+  local how_many=$1                # how many to find
+  file ./*                   |     # report the filetypes
+  awk -F: '/Mach/{print $1}' |     # just the Mach executables
+  xargs ls -LS 2>/dev/null   |     # -L: list symlink targets, -S: sort by size
+  sed 's/^.\///'             |     # trim off leading './'
+  tail -"${how_many}"              # just the shortest few
+}
+
+# shellcheck disable=SC2046
+#   SC2046: Quote this to prevent word splitting.
+cd $(dirname $(which true))        # parent directory of standalone true executable
+shortest "${1:-10}"
