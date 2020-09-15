@@ -29,6 +29,7 @@ def get_args(description: str, args: list = None) -> argparse.Namespace:
 
     assert Path(parsed_args.wild_type).is_file(), f"No file {parsed_args.wild_type}"
     parsed_args.size = Path(parsed_args.wild_type).stat().st_size * 8
+    # TODO: perhaps make the span a named tuple, "parsed.span"
     parsed_args.start, parsed_args.end = parse_span(parsed_args.bit)
     if parsed_args.end == sys.maxsize:
         parsed_args.end = parsed_args.size
