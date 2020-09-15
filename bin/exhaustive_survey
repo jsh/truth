@@ -1,0 +1,33 @@
+#!/bin/bash
+#
+# collect mutation data, simple or verbose
+# collect both the output and timing data
+# from an exhaustive survey of mutations at every bit
+# keep stderr only if non-empty
+
+set -eu  # fail immidiately on errors, typos
+
+trap cleanup EXIT
+
+cleanup() {
+  # clean up empty file
+  [[ -s "$dir/$name.error" ]] || rm "$dir/$name.error"
+}
+
+usage() {
+  # print a usage message and exit
+  echo "usage: $0: [-h|--help] [-v|--verbose] executable"
+  exit 0
+}
+
+case "${1:-}" in
+  -h|--help) usage                        ;;
+  -v|--verbose) dir=output/verbose; shift ;;
+  *) dir=output/simple                    ;;
+esac
+
+[[ $# == 0 ]] && usage    # no args, print a usage message and exit
+wild_type=$(which "$1")   # first arg is the executable
+name=$(basename "$wild_type")
+
+{ time mutate_and_run.py --verbose --wild_type="$wild_type" > "$dir/$name" 2>"$dir/$name.error"; } &> "$dir/$name.time"
