@@ -15,7 +15,4 @@ shortest(){
   tail -"${how_many}"              # just the shortest few
 }
 
-# shellcheck disable=SC2046
-#   SC2046: Quote this to prevent word splitting.
-cd $(dirname $(which true))        # parent directory of standalone true executable
 shortest "${1:-10}"
