@@ -11,7 +11,9 @@ trap cleanup EXIT
 
 cleanup() {
   # clean up empty file
-  [[ -s "$dir/$name.error" ]] || rm "$dir/$name.error"
+  if [[ -e "$dir/$name.error" ]] && [[ ! -s "$dir/$name.error" ]]; then  # exists and is non-zero size
+    rm "$dir/$name.error"
+  fi
 }
 
 usage() {
@@ -22,12 +24,17 @@ usage() {
 
 case "${1:-}" in
   -h|--help) usage                        ;;
-  -v|--verbose) dir=output/verbose; shift ;;
+  -v|--verbose) dir=output/verbose
+                verbose="--verbose"
+		shift
+	                                  ;;
   *) dir=output/simple                    ;;
 esac
 
 [[ $# == 0 ]] && usage    # no args, print a usage message and exit
+export dir name verbose wild_type
+
 wild_type=$(which "$1")   # first arg is the executable
 name=$(basename "$wild_type")
 
-{ time mutate_and_run.py --verbose --wild_type="$wild_type" > "$dir/$name" 2>"$dir/$name.error"; } &> "$dir/$name.time"
+{ time mutate_and_run.py ${verbose:-} --wild_type="$wild_type" > "$dir/$name" 2>"$dir/$name.error"; } &> "$dir/$name.time"
