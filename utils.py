@@ -49,14 +49,19 @@ def which(command: str) -> pathlib.Path:
     )
 
 
-def valid_slice(start: int, stop: int, out_of_bounds: int) -> slice:
-    """Valid slice of a Zoon.
-    create a valid slice [start, stop)
-    :param int start: the start of the slice
-    :param int stop: the stop of the slice
-    :param int out_of_bounds: upper limit for stop
-    :returns: valid slice
-    :rtype: slice
+def excess(bit: int) -> int:
+    """how far beyond the byte boundary is bit?
+    :param int bit: the bit number
+    :return: the excess
+    :rtype: int
     """
-    assert out_of_bounds > stop > start >= 0
-    return slice(start, stop)
+    return bit % 8
+
+
+def adjusted(bit: int) -> int:
+    """how far beyond the byte boundary is bit?
+    :param int bit: the bit number
+    :return: bit shifted down to byte boundary
+    :rtype: int
+    """
+    return bit - excess(bit)

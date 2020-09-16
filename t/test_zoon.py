@@ -42,7 +42,7 @@ def test_init_from_zoon():
     """__init__() works correctly from Zoon"""
     zoon = Zoon("00001100", fromfile=False)
     zoon2 = Zoon(zoon, fromfile=False)
-    assert zoon2.bytes() == zoon.bytes()
+    assert zoon2.byteseq() == zoon.byteseq()
 
 
 def test_bad_string():
@@ -108,7 +108,7 @@ def test_mutate():
     """Mutate a bit in a Zoon"""
     zoon_0 = Zoon("00000000", fromfile=False)
     new_zoon = zoon_0.mutate(0)
-    assert new_zoon.bytes() != zoon_0.bytes()
+    assert new_zoon.byteseq() != zoon_0.byteseq()
     zoon_1 = Zoon("00000001", fromfile=False)
     new_zoon = zoon_1.mutate(7)
-    assert new_zoon.bytes() == zoon_0.bytes()
+    assert new_zoon.byteseq() == zoon_0.byteseq()

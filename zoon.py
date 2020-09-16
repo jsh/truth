@@ -8,13 +8,13 @@ from typing import Tuple
 # pylint: disable=ungrouped-imports
 try:
     import run
-    from utils import to_bytes, toggle_bit_in_byte
+    from utils import adjusted, excess, to_bytes, toggle_bit_in_byte
 except ImportError:
     import sys
 
     sys.path.append(".")
     import run
-    from utils import to_bytes, toggle_bit_in_byte
+    from utils import adjusted, excess, to_bytes, toggle_bit_in_byte
 
 
 class Zoon:
@@ -28,33 +28,33 @@ class Zoon:
         """
         self._initializer = initializer
         self._fromfile = fromfile
-        self._bytes = array.array("B")  # array of unsigned chars
+        self._byteseq = array.array("B")  # array of unsigned chars
         if fromfile:
             path = Path(initializer)
             assert path.is_file()
             with open(initializer, "rb") as fin:
-                self._bytes.fromfile(fin, path.stat().st_size)
+                self._byteseq.fromfile(fin, path.stat().st_size)
         elif isinstance(initializer, str):
             assert set(initializer) <= {"0", "1"}
-            self._bytes.frombytes(to_bytes(initializer))
+            self._byteseq.frombytes(to_bytes(initializer))
         elif isinstance(initializer, Zoon):
-            self._bytes.extend(initializer.bytes())
+            self._byteseq.extend(initializer.byteseq())
         else:
             raise TypeError
 
-    def bytes(self) -> array.array:
+    def byteseq(self) -> array.array:
         """When you really need the underlying array.
         :returns: The bytearray
         :rtype: array.array
         """
-        return self._bytes
+        return self._byteseq
 
     def __len__(self) -> int:
         """Return the length in bits.
         :returns: length in bits
         :rtype: int
         """
-        return len(self._bytes) * 8
+        return len(self._byteseq) * 8
 
     def __repr__(self) -> str:
         """return something that looks just like the object."""
@@ -65,7 +65,7 @@ class Zoon:
         :param str filename: The name of the file to write.
         """
         with open(filename, "wb") as fout:
-            self._bytes.tofile(fout)
+            self._byteseq.tofile(fout)
 
     def mutate(self, position: int):
         """Point-mutate Zoon bytes at the given position.
@@ -74,11 +74,11 @@ class Zoon:
         :rtype: zoon.Zoon
         assert position >= 0
         return new array with bitflip at position
-        exception if position > len(Zoon)
+        TODO: exception if position > len(Zoon)
         """
         byte, bit = divmod(position, 8)
         mutant = Zoon(self, fromfile=False)
-        mutant.bytes()[byte] = toggle_bit_in_byte(7 - bit, mutant.bytes()[byte])
+        mutant.byteseq()[byte] = toggle_bit_in_byte(7 - bit, mutant.byteseq()[byte])
         return mutant
 
     def run(self, timeout: int = 1, args: str = "") -> Tuple[int, str, str, str]:
@@ -101,20 +101,31 @@ class Zoon:
         command = "%s %s" % (mutant_path, args) if args else str(mutant_path)
         return run.run(command, timeout=timeout)
 
+    def delete(self, start: int, stop: int) -> object:  # TODO: define Zoon type
+        """Delete slice from start to stop
+        :param int start: starting bit
+        :param int stop: end bit (open interval)
+        :returns: mutant
+        :rtype: zoon.Zoon
+        TODO: range checks
+        """
+        mutant = Zoon(self, fromfile=False)
+        byteseq = mutant.byteseq()
+        if excess(start):
+            start = adjusted(start)
+            print(f"start must be a byte boundary. Adjusting to {start}")
+        if excess(stop):
+            print(f"stop must be a byte boundary. Adjusting to {stop}")
+
+        start_byte = start // 8
+        stop_byte = stop // 8
+        byteseq = byteseq[:start_byte] + byteseq[stop_byte:]
+        return mutant
+
     # nothing below this implemented
 
     def __str__(self):
         """Print something more attractive."""
-
-    def delete(self, chunk):
-        """Delete a slice from a Zoon
-        :param slice chunk:
-        :returns: new Zoon with chunk deleted
-        :rtype: Zoon
-        assert isinstance(chunk, slice)
-        delete a slice from the bitarray
-        return new Zoon
-        """
 
     def insert(self, position, insertion):
         """Return new Zoon with insertion (a Zoon)
