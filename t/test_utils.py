@@ -4,7 +4,7 @@
 import pytest
 
 try:
-    from utils import to_bytes, toggle_bit_in_byte
+    from utils import adjusted, excess, to_bytes, toggle_bit_in_byte
 except ImportError:
     import sys
 
@@ -53,3 +53,16 @@ def test_toggle_bit_in_int():
         toggle_bit_in_byte(8, 0)
     with pytest.raises(AssertionError):
         toggle_bit_in_byte(0, 256)
+
+
+def test_excess():
+    assert excess(16) == 0
+    assert excess(18) == 2
+    assert excess(14) == 6
+
+
+def test_adjusted():
+    assert adjusted(16) == 16
+    assert adjusted(18) == 16
+    assert adjusted(14) == 8
+

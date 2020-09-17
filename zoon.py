@@ -113,9 +113,10 @@ class Zoon:
         byteseq = mutant.byteseq()
         if excess(start):
             start = adjusted(start)
-            print(f"start must be a byte boundary. Adjusting to {start}")
+            print(f"start must be at byte boundary. Adjusting to {start}")
         if excess(stop):
-            print(f"stop must be a byte boundary. Adjusting to {stop}")
+            stop = adjusted(stop)
+        print(f"stop must be at byte boundary. Adjusting to {stop}")
 
         start_byte = start // 8
         stop_byte = stop // 8
