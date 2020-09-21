@@ -1,6 +1,6 @@
 # The usual
 
-SOURCES=$(wildcard *.py t/*.py)
+SOURCES=$(wildcard *.py */*.py)
 
 all: lint test
 
