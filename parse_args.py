@@ -5,15 +5,15 @@ import argparse
 import re
 import sys
 from pathlib import Path
-from typing import Tuple
+from typing import List, Tuple
 
 from utils import which
 
 
-def get_args(description: str, args: list = None) -> argparse.Namespace:
+def get_args(description: str, args: List = None) -> argparse.Namespace:
     """Parse the args
     :param str description: description message for executable
-    :param list or None args: the argument list to parse
+    :param list args: the argument list to parse
     :returns: the args, massaged and sanity-checked
     :rtype: argparse.Namespace
     """
@@ -24,6 +24,8 @@ def get_args(description: str, args: list = None) -> argparse.Namespace:
         "--wild_type", default=which("true"), help="un-mutated executable"
     )
     parser.add_argument("--verbose", help="be extra chatty", action="store_true")
+    if args is None:
+        args = []
 
     parsed_args = parser.parse_args(args)
 
