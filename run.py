@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
-"""Module docstring."""
-
-import shlex
-import subprocess
-from subprocess import PIPE
-from typing import Tuple
-"""
+"""Run an executable
 1 - Catchall for general errors
 2 - Misuse of shell builtins (according to Bash documentation)
 126 - Command invoked cannot execute
@@ -14,11 +8,16 @@ from typing import Tuple
 128+n - Fatal error signal “n”
 130 - Script terminated by Control-C
 -1 - Same as 254 == -1 mod 256
-255\* - Exit status out of range
+> 255 - Exit status out of range
 
 See https://tldp.org/LDP/abs/html/exitcodes.html
 See also /usr/include/sysexits.h
 """
+
+import shlex
+import subprocess
+from subprocess import PIPE
+from typing import Tuple
 
 
 def run(command: str, timeout: int = 1) -> Tuple[int, str, str, str]:
