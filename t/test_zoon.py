@@ -37,6 +37,12 @@ def test_bad_string():
         Zoon("abcdefgh", fromfile=False)
 
 
+def test_bad_initializer():
+    """assert on attempt to create Zoon from non-binary string."""
+    with pytest.raises(TypeError):
+        Zoon({}, fromfile=False)
+
+
 def test_bad_file():
     """assert on attempt to create Zoon from non-file."""
     with pytest.raises(AssertionError):
@@ -98,3 +104,10 @@ def test_mutate():
     zoon_1 = Zoon("00000001", fromfile=False)
     new_zoon = zoon_1.mutate(7)
     assert new_zoon.byteseq() == zoon_0.byteseq()
+
+
+def test_run():
+    """Run a zoon"""
+    expected = (0, "success", "", "")
+    zoon = Zoon(TRUE)
+    assert zoon.run() == expected
