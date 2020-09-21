@@ -11,7 +11,7 @@ black: isort
 	black -q ${SOURCES}
 
 clean:
-	git clean -dfx --exclude=output
+	git clean -dfx --exclude=results --exclude=bin
 
 coverage:
 	- pytest --cov --cov-report=html
