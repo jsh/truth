@@ -3,12 +3,13 @@
 
 import argparse
 import sys
+from typing import List
 
 from parse_args import get_args
 from zoon import Zoon
 
 
-def mutate_and_run(args: argparse.Namespace) -> list:
+def mutate_and_run(args: argparse.Namespace) -> List:
     """Mutatate the wild type at each bit in a range and capture the results.
     :param args.Namespace args: All the args
     :return: list of results of all runs
