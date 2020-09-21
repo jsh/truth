@@ -111,3 +111,18 @@ def test_run():
     expected = (0, "success", "", "")
     zoon = Zoon(TRUE)
     assert zoon.run() == expected
+
+
+def test_delete():
+    """Deletes delete correctly."""
+    one = "00000001"
+    ten = "00001010"
+    zoon_0 = Zoon(one + ten + one, fromfile=False)
+    zoon_1 = Zoon(one * 2, fromfile=False)
+    assert zoon_0.delete(8, 16).byteseq == zoon_1.byteseq
+    assert zoon_0.delete(8, 17).byteseq == zoon_1.byteseq
+    assert zoon_0.delete(10, 17).byteseq == zoon_1.byteseq
+    assert zoon_0.delete(6, 17).byteseq != zoon_1.byteseq
+    assert zoon_0.delete(17, 25).byteseq != zoon_1.byteseq
+    assert zoon_0.delete(8, 9).byteseq != zoon_1.byteseq
+    assert zoon_0.delete(0, 7).byteseq != zoon_1.byteseq
