@@ -24,11 +24,11 @@ usage() {
 
 case "${1:-}" in
   -h|--help) usage                        ;;
-  -v|--verbose) dir=output/verbose
+  -v|--verbose) dir=results/point_mutants/chatty
                 verbose="--verbose"
 		shift
 	                                  ;;
-  *) dir=output/simple                    ;;
+  *) dir=results/point_mutants/quiet      ;;
 esac
 
 [[ $# == 0 ]] && usage    # no args, print a usage message and exit
