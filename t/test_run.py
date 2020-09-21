@@ -40,10 +40,10 @@ def test_run_fail():
         "linux",
     }, "Platform {platform} must be 'darwin' or 'linux'"
 
-    if platform == "darwin":
-        assert observed[0] == 1
-    elif platform == "linux":
+    if platform == "linux":
         assert observed[0] == 2
+    elif platform == "darwin":
+        assert observed[0] == 1
     assert observed[1:3] == ("calledprocesserror", "")
     assert "No such file or directory\n" in observed[3]
 
