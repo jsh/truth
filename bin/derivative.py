@@ -18,7 +18,7 @@ would be reported as
 
 import sys
 
-last_value = [None, None]
+last_value = ["", ""]
 last_index = -1
 index = -1
 with open(sys.argv[1]) as fin:
