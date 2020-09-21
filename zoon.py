@@ -6,15 +6,8 @@ from pathlib import Path
 from typing import Tuple
 
 # pylint: disable=ungrouped-imports
-try:
-    import run
-    from utils import to_bytes, toggle_bit_in_byte
-except ImportError:
-    import sys
-
-    sys.path.append(".")
-    import run
-    from utils import to_bytes, toggle_bit_in_byte
+import run
+from utils import to_bytes, toggle_bit_in_byte
 
 
 class Zoon:
