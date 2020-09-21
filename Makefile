@@ -4,6 +4,7 @@ SOURCES=$(wildcard *.py t/*.py)
 
 all: lint test
 
+# lint: black mypy pylint pylama
 lint: black mypy pylint pylama
 
 black: isort
@@ -11,6 +12,10 @@ black: isort
 
 clean:
 	git clean -dfx --exclude=output
+
+coverage:
+	- pytest --cov --cov-report=html
+	open htmlcov/index.html
 
 fixme:
 	pylint -rn ${SOURCES} | sort -t: -k2 -n -r
