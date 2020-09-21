@@ -69,3 +69,15 @@ def test_run_no_timeout():
     """timeout produces timeoutexpired"""
     expected = (0, "success", "", "")
     assert run("sleep 2", timeout=3) == expected
+
+
+def test_run_permission_denied():
+    """run something without perms produces permissionerror."""
+    expected = (126, "permissionerror", "", "[Errno 13] Permission denied: '/etc/passwd'")
+    assert run("/etc/passwd") == expected
+
+
+def test_run_file_not_found():
+    """run something not a file produces filenotfounderror."""
+    expected = (2, "filenotfounderror", "", "[Errno 2] No such file or directory: '<>': '<>'")
+    assert run("<>") == expected
