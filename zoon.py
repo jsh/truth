@@ -116,7 +116,7 @@ class Zoon:
             print(f"start must be at byte boundary. Adjusting to {start}")
         if excess(stop):
             stop = adjusted(stop)
-        print(f"stop must be at byte boundary. Adjusting to {stop}")
+            print(f"stop must be at byte boundary. Adjusting to {stop}")
 
         start_byte = start // 8
         stop_byte = stop // 8
