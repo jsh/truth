@@ -8,13 +8,13 @@ from typing import Tuple
 # pylint: disable=ungrouped-imports
 try:
     import run
-    from utils import adjusted, excess, to_bytes, toggle_bit_in_byte
+    from utils import to_bytes, toggle_bit_in_byte
 except ImportError:
     import sys
 
     sys.path.append(".")
     import run
-    from utils import adjusted, excess, to_bytes, toggle_bit_in_byte
+    from utils import to_bytes, toggle_bit_in_byte
 
 
 class Zoon:
@@ -101,6 +101,8 @@ class Zoon:
         command = "%s %s" % (mutant_path, args) if args else str(mutant_path)
         return run.run(command, timeout=timeout)
 
+    # nothing below this implemented
+
     def delete(self, start: int, stop: int) -> object:  # TODO: define Zoon type
         """Delete slice from start to stop
         :param int start: starting bit
@@ -109,21 +111,6 @@ class Zoon:
         :rtype: zoon.Zoon
         TODO: range checks
         """
-        mutant = Zoon(self, fromfile=False)
-        byteseq = mutant.byteseq()
-        if excess(start):
-            start = adjusted(start)
-            print(f"start must be at byte boundary. Adjusting to {start}")
-        if excess(stop):
-            stop = adjusted(stop)
-            print(f"stop must be at byte boundary. Adjusting to {stop}")
-
-        start_byte = start // 8
-        stop_byte = stop // 8
-        byteseq = byteseq[:start_byte] + byteseq[stop_byte:]
-        return mutant
-
-    # nothing below this implemented
 
     def __str__(self):
         """Print something more attractive."""

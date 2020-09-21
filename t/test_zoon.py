@@ -112,15 +112,3 @@ def test_mutate():
     zoon_1 = Zoon("00000001", fromfile=False)
     new_zoon = zoon_1.mutate(7)
     assert new_zoon.byteseq() == zoon_0.byteseq()
-
-
-def test_delete():
-    zoon_0 = Zoon("01000000", fromfile=False)
-    zoon_1 = Zoon("0000000", fromfile=False)
-    assert zoon_0.delete(8, 17) == zoon_1
-    assert zoon_0.delete(10, 17) == zoon_1
-    assert zoon_0.delete(6, 17) != zoon_1
-    assert zoon_0.delete(17, 25) != zoon_1
-    assert zoon_0.delete(8, 9) != zoon_1
-    assert zoon_0.delete(0, 7) != zoon_1
-

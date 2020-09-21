@@ -56,13 +56,14 @@ def test_toggle_bit_in_int():
 
 
 def test_excess():
+    """Report excess correctly."""
     assert excess(16) == 0
     assert excess(18) == 2
     assert excess(14) == 6
 
 
 def test_adjusted():
+    """Report adjusted byte boundary correctly."""
     assert adjusted(16) == 16
     assert adjusted(18) == 16
     assert adjusted(14) == 8
-
