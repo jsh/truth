@@ -3,13 +3,7 @@
 
 import pytest
 
-try:
-    from utils import adjusted, excess, to_bytes, toggle_bit_in_byte
-except ImportError:
-    import sys
-
-    sys.path.append(".")
-    from utils import to_bytes, toggle_bit_in_byte
+from utils import adjusted, excess, to_bytes, toggle_bit_in_byte
 
 
 def test_to_bytes_low():

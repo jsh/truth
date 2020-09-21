@@ -6,22 +6,8 @@ from pathlib import Path
 
 import pytest
 
-try:
-    from utils import to_bytes, which
-except ImportError:
-    import sys
-
-    sys.path.append(".")
-    from utils import to_bytes, which
-
-try:
-    from zoon import Zoon
-except ImportError:
-    import sys
-
-    sys.path.append(".")
-    from zoon import Zoon
-
+from utils import to_bytes, which
+from zoon import Zoon
 
 TRUE = which("true")
 

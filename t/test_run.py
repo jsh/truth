@@ -4,13 +4,8 @@
 import datetime
 import sys
 
-try:
-    from run import run
-    from utils import which
-except ImportError:
-    sys.path.append(".")
-    from run import run
-    from utils import which
+from run import run
+from utils import which
 
 BADPATH = "/u/jane/me/tarzan"
 
