@@ -3,7 +3,7 @@
 
 import array
 from pathlib import Path
-from typing import Tuple
+from typing import List, Tuple
 
 # pylint: disable=ungrouped-imports
 import run
@@ -21,33 +21,41 @@ class Zoon:
         """
         self._initializer = initializer
         self._fromfile = fromfile
-        self._byteseq = array.array("B")  # array of unsigned chars
+        self.__byteseq = array.array("B")  # array of unsigned chars
         if fromfile:
             path = Path(initializer)
             assert path.is_file()
             with open(initializer, "rb") as fin:
-                self._byteseq.fromfile(fin, path.stat().st_size)
+                self.__byteseq.fromfile(fin, path.stat().st_size)
         elif isinstance(initializer, str):
             assert set(initializer) <= {"0", "1"}
-            self._byteseq.frombytes(to_bytes(initializer))
+            self.__byteseq.frombytes(to_bytes(initializer))
         elif isinstance(initializer, Zoon):
-            self._byteseq.extend(initializer.byteseq())
+            self.__byteseq.extend(initializer.byteseq)
         else:
             raise TypeError
 
+    @property
     def byteseq(self) -> array.array:
         """When you really need the underlying array.
         :returns: The bytearray
         :rtype: array.array
         """
-        return self._byteseq
+        return self.__byteseq
+
+    @byteseq.setter
+    def byteseq(self, new_list: List[int]):
+        """When you really need the underlying array.
+        :param list[int] new_list: The new bytearray
+        """
+        self.__byteseq = array.array("B", new_list)
 
     def __len__(self) -> int:
         """Return the length in bits.
         :returns: length in bits
         :rtype: int
         """
-        return len(self._byteseq) * 8
+        return len(self.__byteseq) * 8
 
     def __repr__(self) -> str:
         """return something that looks just like the object."""
@@ -58,7 +66,7 @@ class Zoon:
         :param str filename: The name of the file to write.
         """
         with open(filename, "wb") as fout:
-            self._byteseq.tofile(fout)
+            self.__byteseq.tofile(fout)
 
     def mutate(self, position: int):
         """Point-mutate Zoon bytes at the given position.
@@ -71,7 +79,7 @@ class Zoon:
         """
         byte, bit = divmod(position, 8)
         mutant = Zoon(self, fromfile=False)
-        mutant.byteseq()[byte] = toggle_bit_in_byte(7 - bit, mutant.byteseq()[byte])
+        mutant.byteseq[byte] = toggle_bit_in_byte(7 - bit, mutant.byteseq[byte])
         return mutant
 
     def run(self, timeout: int = 1, args: str = "") -> Tuple[int, str, str, str]:
