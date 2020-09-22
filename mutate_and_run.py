@@ -1,49 +1,45 @@
 #!/usr/bin/env python3
 """Drive the truth."""
 
-import argparse
 import sys
-from typing import List
+from typing import Tuple
 
 from parse_args import get_args
 from zoon import Zoon
 
+Result = Tuple[int, str, str, str]
 
-def mutate_and_run(args: argparse.Namespace) -> List:
+
+def mutate_and_run(wild_type, start, end, verbose=False) -> None:
     """Mutatate the wild type at each bit in a range and capture the results.
+    :param object wild_type: What to start with
+    :param int start: where to start mutating
+    :param int end: where to stop mutating
     :param args.Namespace args: All the args
-    :return: list of results of all runs
-    :rtype: list[tuple[int, str, str, str]]
+    :param bool verbose: chatty or terse reporting?
     """
-    zoon = Zoon(args.wild_type)
-    start, end = args.start, args.end
-
-    results = [None] * len(zoon)  # preallocate: thinking ahead to threadded version
+    zoon = Zoon(wild_type)
 
     for bit in range(start, end):
         mutant = zoon.mutate(bit)
-        results[bit] = mutant.run()
-    assert None not in results[start:end], f"returncodes not set in {start}:{end}"
-    # did we miss one?
-
-    return results
+        result = mutant.run()
+        report(result, bit, verbose=verbose)
 
 
-def report(results: list, args: argparse.Namespace):
+def report(result: Result, bit, verbose=False) -> None:
     """Report the results.
     :param list results: results to report
-    :param args argparse.Namespace: contains args.start and args.end
+    :param int bit: mutated bit
+    :param bool verbose: chatty or terse?
     """
-    for bit in range(args.start, args.end):
-        result = results[bit]
-        if args.verbose:
-            print(f"mutant at bit {bit}: {result}")
-        else:
-            if result:
-                print(f"{bit}\t{result[0]}")
+    if verbose:
+        print(f"mutant at bit {bit}: {result}")
+    else:
+        if result:
+            print(f"{bit}\t{result[0]}")
 
 
-def main(argv: list):
+def main(argv: list) -> None:
     """The big tent.
     :param list argv: All the args. sys.argv
     """
@@ -51,9 +47,8 @@ def main(argv: list):
     args = get_args(
         "Brute-force survey of point mutants, every site in a span.", argv[1:]
     )
-    print(args)
-    results = mutate_and_run(args)
-    report(results, args)
+    print(args, file=sys.stderr)
+    mutate_and_run(args.wild_type, args.start, args.end, verbose=args.verbose)
 
 
 if __name__ == "__main__":
