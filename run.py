@@ -19,8 +19,10 @@ import subprocess
 from subprocess import PIPE
 from typing import Tuple
 
+Result = Tuple[int, str, str, str]
 
-def run(command: str, timeout: int = 1) -> Tuple[int, str, str, str]:
+
+def run(command: str, timeout: int = 1) -> Result:
     """Run the command and record the result.
     :param str command:
     :param int timeout: # timeout

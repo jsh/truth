@@ -10,26 +10,26 @@ from utils import which
 BADPATH = "/u/jane/me/tarzan"
 
 
-def test_run_test_true():
+def test_run_test_true() -> None:
     """simple success"""
     expected = (0, "success", "", "")
     assert run(str(which("true"))) == expected
 
 
-def test_run_test_false():
+def test_run_test_false() -> None:
     """simple failure"""
     expected = (1, "calledprocesserror", "", "")
     assert run(str(which("false"))) == expected
 
 
-def test_run_success():
+def test_run_success() -> None:
     """successful run produces expected results"""
     today = datetime.date.today().strftime("%F\n")
     expected = (0, "success", today, "")
     assert run("date +%F") == expected
 
 
-def test_run_fail():
+def test_run_fail() -> None:
     """unsuccessful run produces calledprocesserror"""
     observed = run(f"ls {BADPATH}")
 
@@ -48,7 +48,7 @@ def test_run_fail():
     assert "No such file or directory\n" in observed[3]
 
 
-def test_run_badpath():
+def test_run_badpath() -> None:
     """bad command produces filenotfounderror"""
     expected = (
         2,
@@ -59,19 +59,19 @@ def test_run_badpath():
     assert run(BADPATH) == expected
 
 
-def test_run_timeout():
+def test_run_timeout() -> None:
     """timeout produces timeoutexpired"""
     expected = (124, "timeoutexpired", "", "")
     assert run("sleep 2") == expected
 
 
-def test_run_no_timeout():
+def test_run_no_timeout() -> None:
     """timeout produces timeoutexpired"""
     expected = (0, "success", "", "")
     assert run("sleep 2", timeout=3) == expected
 
 
-def test_run_permission_denied():
+def test_run_permission_denied() -> None:
     """run something without perms produces permissionerror."""
     expected = (
         126,
@@ -82,7 +82,7 @@ def test_run_permission_denied():
     assert run("/etc/passwd") == expected
 
 
-def test_run_file_not_found():
+def test_run_file_not_found() -> None:
     """run something not a file produces filenotfounderror."""
     expected = (
         2,

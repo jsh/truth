@@ -12,44 +12,44 @@ from zoon import Zoon
 TRUE = which("true")
 
 
-def test_init_from_file():
+def test_init_from_file() -> None:
     """__init__() works correctly from string"""
     zoon = Zoon(TRUE)
     assert "%r" % zoon == f"zoon.Zoon('{TRUE}', fromfile=True)"
 
 
-def test_init_from_string():
+def test_init_from_string() -> None:
     """__init__() works correctly from string."""
     zoon = Zoon("000011", fromfile=False)
     assert "%r" % zoon == "zoon.Zoon('000011', fromfile=False)"
 
 
-def test_init_from_zoon():
+def test_init_from_zoon() -> None:
     """__init__() works correctly from Zoon"""
     zoon = Zoon("00001100", fromfile=False)
     zoon2 = Zoon(zoon, fromfile=False)
     assert zoon2.byteseq == zoon.byteseq
 
 
-def test_bad_string():
+def test_bad_string() -> None:
     """assert on attempt to create Zoon from non-binary string."""
     with pytest.raises(AssertionError):
         Zoon("abcdefgh", fromfile=False)
 
 
-def test_bad_initializer():
+def test_bad_initializer() -> None:
     """assert on attempt to create Zoon from non-binary string."""
     with pytest.raises(TypeError):
         Zoon({}, fromfile=False)
 
 
-def test_bad_file():
+def test_bad_file() -> None:
     """assert on attempt to create Zoon from non-file."""
     with pytest.raises(AssertionError):
         Zoon("mumblefrabitz")
 
 
-def test_string_len():
+def test_string_len() -> None:
     """len() works correctly on Zoon from string."""
     zoon = Zoon("00000011", fromfile=False)  # low bits set
     assert len(zoon) == 8
@@ -63,13 +63,13 @@ def test_string_len():
     assert len(zoon) == 8
 
 
-def test_file_len():
+def test_file_len() -> None:
     """len() works correctly on Zoon from file"""
     zoon = Zoon(TRUE)
     assert len(zoon) == Path(TRUE).stat().st_size * 8
 
 
-def test_write_low(tmp_path):
+def test_write_low(tmp_path) -> None:
     """Low bits set."""
     bit_string = "00000011"
     zoon = Zoon(bit_string, fromfile=False)
@@ -78,7 +78,7 @@ def test_write_low(tmp_path):
     assert bit_path.read_bytes() == to_bytes(bit_string)
 
 
-def test_write_high(tmp_path):
+def test_write_high(tmp_path) -> None:
     """High bits set."""
     bit_string = "11000000"
     zoon = Zoon(bit_string, fromfile=False)
@@ -87,7 +87,7 @@ def test_write_high(tmp_path):
     assert bit_path.read_bytes() == to_bytes(bit_string)
 
 
-def test_write_missing(tmp_path):
+def test_write_missing(tmp_path) -> None:
     """0-pad on the right."""
     bit_string = "000011"
     zoon = Zoon(bit_string, fromfile=False)
@@ -96,7 +96,7 @@ def test_write_missing(tmp_path):
     assert bit_path.read_bytes() == to_bytes(bit_string)
 
 
-def test_mutate():
+def test_mutate() -> None:
     """Mutate a bit in a Zoon"""
     zoon_0 = Zoon("00000000", fromfile=False)
     new_zoon = zoon_0.mutate(0)
@@ -106,14 +106,14 @@ def test_mutate():
     assert new_zoon.byteseq == zoon_0.byteseq
 
 
-def test_run():
+def test_run() -> None:
     """Run a zoon"""
     expected = (0, "success", "", "")
     zoon = Zoon(TRUE)
     assert zoon.run() == expected
 
 
-def test_delete():
+def test_delete() -> None:
     """Deletes delete correctly."""
     one = "00000001"
     ten = "00001010"

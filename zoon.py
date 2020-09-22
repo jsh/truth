@@ -3,10 +3,12 @@
 
 import array
 from pathlib import Path
-from typing import List, Tuple
+from typing import Any, List, Tuple
 
 import run
 from utils import adjusted, excess, to_bytes, toggle_bit_in_byte
+
+Result = Tuple[int, str, str, str]
 
 
 class Zoon:
@@ -15,7 +17,10 @@ class Zoon:
     :param bool fromfile: is this coming from a file?
     """
 
-    def __init__(self, initializer, fromfile: bool = True):
+    __byteseq: array.array
+    initializer: Any  # TODO: constrain
+
+    def __init__(self, initializer, fromfile: bool = True) -> None:
         """Instantiate a Zoon.
         """
         self._initializer = initializer
@@ -43,7 +48,7 @@ class Zoon:
         return self.__byteseq
 
     @byteseq.setter
-    def byteseq(self, new_list: List[int]):
+    def byteseq(self, new_list: List[int]) -> None:
         """When you really need the underlying array.
         :param list[int] new_list: The new bytearray
         """
@@ -60,14 +65,14 @@ class Zoon:
         """return something that looks just like the object."""
         return f"zoon.Zoon('{self._initializer}', fromfile={self._fromfile})"
 
-    def write(self, filename: Path):
+    def write(self, filename: Path) -> None:
         """Write Zoon to file.
         :param str filename: The name of the file to write.
         """
         with open(filename, "wb") as fout:
             self.__byteseq.tofile(fout)
 
-    def mutate(self, position: int):
+    def mutate(self, position: int) -> Any:  # TODO: Zoon?
         """Point-mutate Zoon bytes at the given position.
         :param int position: the position of the point mutation
         :return: mutant
@@ -81,7 +86,7 @@ class Zoon:
         mutant.byteseq[byte] = toggle_bit_in_byte(7 - bit, mutant.byteseq[byte])
         return mutant
 
-    def run(self, timeout: int = 1, args: str = "") -> Tuple[int, str, str, str]:
+    def run(self, timeout: int = 1, args: str = "") -> Result:
         """Run the Zoon.
         :param int timeout: timeout in seconds
         :param bool output: provide output
@@ -101,9 +106,7 @@ class Zoon:
         command = "%s %s" % (mutant_path, args) if args else str(mutant_path)
         return run.run(command, timeout=timeout)
 
-    # nothing below this implemented
-
-    def delete(self, start: int, stop: int):  # -> object:  # TODO: define Zoon type
+    def delete(self, start: int, stop: int) -> Any:  # TODO: Optional[Zoon]?
         """Delete slice from start to stop
         :param int start: starting bit
         :param int stop: end bit (open interval)
