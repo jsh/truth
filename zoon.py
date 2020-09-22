@@ -7,7 +7,7 @@ from typing import List, Tuple
 
 # pylint: disable=ungrouped-imports
 import run
-from utils import to_bytes, toggle_bit_in_byte
+from utils import adjusted, excess, to_bytes, toggle_bit_in_byte
 
 
 class Zoon:
