@@ -1,0 +1,38 @@
+#!/bin/bash
+# Convert binary to 6-character hex dump of bytes.
+# All bytes are in a single line.
+# Output ends in a newline.
+# Each byte displays as six characters, like this
+#     " 0xde, 0xad, 0xbe, 0xef, ..."
+# Big-endian specific.
+
+set -e           # fail immediately on errors
+set -u           # catch typos
+set -o pipefail  # catch errors within a pipeline
+
+die() { echo "$@"; exit 1; } >& 2   # message to stderr and fail
+
+set_head() {
+  # Get your head straight.
+  # Could leave head global and just call the function to set head
+  # but making it local and returning the value is better isolation
+  # and makes it more maintainable.
+  local head
+  case $(uname -s) in
+    Darwin) head=/usr/local/bin/ghead
+    ;;
+    Linux) head=/usr/bin/head
+    ;;
+    *) die "$(uname -s)" must be Darwin or Linux
+    ;;
+  esac
+  echo $head
+}
+
+head=$(set_head)
+
+cat ${1:-}     |   # take from stdin or arg
+xxd -i         |   # hex-dump C-style
+  tr '\n' ' '  |   # make it all one line
+  tr -s ' '        # compress artifactual runs of blanks
+echo               # end with a newline
