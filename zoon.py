@@ -5,7 +5,6 @@ import array
 from pathlib import Path
 from typing import List, Tuple
 
-# pylint: disable=ungrouped-imports
 import run
 from utils import adjusted, excess, to_bytes, toggle_bit_in_byte
 
