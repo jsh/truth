@@ -33,6 +33,6 @@ head=$(set_head)
 
 cat ${1:-}     |   # take from stdin or arg
 xxd -i         |   # hex-dump C-style
-  tr '\n' ' '  |   # make it all one line
-  tr -s ' '        # compress artifactual runs of blanks
-echo               # end with a newline
+  tr ',' '\n'  |   # put every byte on its own line
+  tr -d ' '    |   # delete blanks
+  sed '/^$/d'      # delete empty lines
