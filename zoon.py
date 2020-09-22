@@ -104,7 +104,7 @@ class Zoon:
 
     # nothing below this implemented
 
-    def delete(self, start: int, stop: int) -> object:  # TODO: define Zoon type
+    def delete(self, start: int, stop: int):  # -> object:  # TODO: define Zoon type
         """Delete slice from start to stop
         :param int start: starting bit
         :param int stop: end bit (open interval)
