@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Module docstring."""
 
+
 class MyClass:
     """Class docstring."""
+
     def __init__(self, value: int) -> None:
         """Function docstring."""
         self._value = value
