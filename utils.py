@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 """Miscellaneous utility routines."""
 
+import collections
 import pathlib
+import re
 import subprocess
+import sys
 from pathlib import Path
+
+Span = collections.namedtuple("Span", "start end")
 
 
 def to_bytes(binary_string: str) -> bytes:
@@ -65,3 +70,28 @@ def adjusted(bit: int) -> int:
     :rtype: int
     """
     return bit - excess(bit)
+
+
+def parsed_span(span: str) -> Span:
+    """parse a span
+    :param str bit: range specified
+    :returns: beginning and end of span
+    :rtype: tuple(int, int)
+    """
+
+    if not span:
+        span = "0:"  # the entire sequence
+    elif re.fullmatch(r"-?\d+", span):
+        return Span(start=int(span), end=int(span) + 1)
+    span_pat = r"(-?\d*):(-?\d*)"
+    match = re.fullmatch(span_pat, span)
+    if match:
+        # pull apart "left:right", turn into start and end of range
+        left = match.group(1)
+        if not left:
+            left = "0"
+        start = int(left)
+        right = match.group(2)
+        end = int(right) if right else sys.maxsize
+        return Span(start=start, end=end)
+    raise TypeError("--bit argument must be a colon-separated range or a single int")
