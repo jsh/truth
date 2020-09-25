@@ -5,7 +5,6 @@ import argparse
 import sys
 
 from parse_args import get_args
-from utils import adjusted
 from zoon import Zoon
 
 
@@ -17,30 +16,26 @@ def delete_range_and_run(args: argparse.Namespace) -> None:
     """
 
     zoon = Zoon(args.wild_type)
-    start, end = args.start, args.end
-    start_byte = start // 8
-    end_byte = end // 8 + 1
-    for deletion_start_byte in range(start_byte, end_byte - 1):
-        for deletion_end_byte in range(deletion_start_byte + 1, end_byte):
-            mutant = zoon.delete(deletion_start_byte * 8, deletion_end_byte * 8)
+    start, end = args.bytes.start, args.bytes.end
+    for deletion_start in range(start, end - 1):
+        for deletion_end in range(deletion_start + 1, end):
+            mutant = zoon.delete(deletion_start, deletion_end)
             if mutant:
                 result = mutant.run()
-                report(result, args, deletion_start_byte, deletion_end_byte)
+                report(result, args, deletion_start, deletion_end)
 
 
-def report(
-    result: tuple, args, deletion_start_byte: int, deletion_end_byte: int
-) -> None:
+def report(result: tuple, args, deletion_start: int, deletion_end: int) -> None:
     """Report the result.
     :param tuple results: results to report
-    :param int deletion_start_byte: lower bound (included)
-    :param int deletion_end_byte: upper bound (not included)
+    :param int deletion_start: lower bound (included)
+    :param int deletion_end: upper bound (not included)
     """
     if args.verbose:
-        print(f"deletion of {deletion_start_byte*8}:{deletion_end_byte*8}: {result}")
+        print(f"deletion of bytes {deletion_start}:{deletion_end}: {result}")
     else:
         if result:
-            print(f"{deletion_start_byte*8}:{deletion_end_byte*8}\t{result[0]}")
+            print(f"{deletion_start}:{deletion_end}\t{result[0]}")
 
 
 def main(argv: list) -> None:
@@ -49,8 +44,6 @@ def main(argv: list) -> None:
     """
 
     args = get_args("Delete a chunk and run.", argv[1:])
-    args.start = adjusted(args.start)
-    args.end = adjusted(args.end)
     delete_range_and_run(args)
 
 

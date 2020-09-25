@@ -3,22 +3,10 @@
 Modeled on https://bit.ly/35u38gV
 """
 
-import os
-import sys
-
 import pytest
 
-try:
-    from parse_args import get_args, parse_span, which
-except ImportError:
-    sys.path.append(".")
-    from parse_args import get_args, parse_span, which
-
-
-def test_which() -> None:
-    """executing which() succeeds"""
-    truepath = which("true")
-    assert os.system(truepath) == 0
+from parse_args import get_args
+from utils import which
 
 
 def test_get_args_defaults() -> None:
@@ -27,10 +15,28 @@ def test_get_args_defaults() -> None:
     assert parser.wild_type == which("true")
 
 
-def test_bit() -> None:
-    """get_args understands --bit"""
-    parser = get_args("Testing bit", ["--bit=69"])
-    assert parser.start == 69
+def test_bits() -> None:
+    """get_args understands --bits"""
+    parser = get_args("Testing bits", ["--bits=69"])
+    assert parser.bits.start == 69
+
+
+def test_bits_to_end() -> None:
+    """get_args understands --bits"""
+    parser = get_args("Testing bits", ["--bits=69"])
+    assert parser.bits.start == 69
+
+
+def test_bytes() -> None:
+    """get_args understands --bytes"""
+    parser = get_args("Testing bytes", ["--bytes=69"])
+    assert parser.bytes.start == 69
+
+
+def test_bytes_to_end() -> None:
+    """get_args understands --bytes"""
+    parser = get_args("Testing bytes", ["--bytes=69:"])
+    assert parser.bytes.start == 69
 
 
 def test_wild_type() -> None:
@@ -46,20 +52,12 @@ def test_verbose() -> None:
     assert parser.verbose
 
 
+def test_argument_bits_and_bytes() -> None:
+    """specifying both --bits and --bytes raises exception"""
+    with pytest.raises(SystemExit):
+        get_args("Testing illegal arg combo", ["--bytes=69:", "--bits=69:"])
+
+
 def test_help() -> None:
     """test help which throws a SystemExit"""
     # TODO: How do I do this?
-
-
-def test_parse_span() -> None:
-    """parse_span handles all five span types"""
-    assert (0, sys.maxsize) == parse_span("")
-    assert (69, 70) == parse_span("69")
-    assert (6, 9) == parse_span("6:9")
-    assert (69, sys.maxsize) == parse_span("69:")
-    assert (0, 69) == parse_span(":69")
-    assert (0, sys.maxsize) == parse_span(":")
-    # TODO: need a mock to set args.size
-
-    with pytest.raises(TypeError):
-        parse_span("xxx")

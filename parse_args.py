@@ -2,64 +2,76 @@
 """Argument handling."""
 
 import argparse
-import re
-import sys
+import collections
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Optional
 
-from utils import which
+from utils import parsed_span, which
+
+Span = collections.namedtuple("Span", "start end")
 
 
-def get_args(description: str, args: List = None) -> argparse.Namespace:
+def get_args(
+    description: str = None, args: Optional[List] = None
+) -> argparse.Namespace:
     """Parse the args
     :param str description: description message for executable
-    :param list args: the argument list to parse
+    :param list or None args: the argument list to parse
     :returns: the args, massaged and sanity-checked
     :rtype: argparse.Namespace
+
+    When this finishes we return a Namespace that has these attributes
+      - verbose: how chatty to be (Bool)
+      - wild_type: path to executable being considered (e.g., "/usr/bin/true")
+      - bit_size: size of wild_type, in bits (int)
+      - byte_size: size of wild_type, in bytes (int)
+      - bits: bit-range of interest (Span)
+      - bytes: byte-range of interest (Span)
+      This is a little redundant, but it's convenient and simplifies other code.
     """
 
     parser = argparse.ArgumentParser(description=description)
-    parser.add_argument("--bit", help="bit(s) of interest")
+    bits_or_bytes = parser.add_mutually_exclusive_group()
+    bits_or_bytes.add_argument("--bits", help="bit(s) of interest", type=parsed_span)
+    bits_or_bytes.add_argument("--bytes", help="bytes(s) of interest", type=parsed_span)
     parser.add_argument(
-        "--wild_type", default=which("true"), help="un-mutated executable"
+        "--wild_type",
+        default=which("true"),
+        help="un-mutated executable (default: %(default)s)",
     )
     parser.add_argument("--verbose", help="be extra chatty", action="store_true")
+    assert description, "executable description required"
     if args is None:
         args = []
 
     parsed_args = parser.parse_args(args)
+    print(parsed_args)
 
+    # attribute validatation and enhancement
+    # TODO: I could do file work with type=, too.
     assert Path(parsed_args.wild_type).is_file(), f"No file {parsed_args.wild_type}"
-    parsed_args.size = Path(parsed_args.wild_type).stat().st_size * 8
-    # TODO: perhaps make the span a named tuple, "parsed.span"
-    parsed_args.start, parsed_args.end = parse_span(parsed_args.bit)
-    if parsed_args.end == sys.maxsize:
-        parsed_args.end = parsed_args.size
+
+    # sizes
+    parsed_args.size_in_bytes = Path(parsed_args.wild_type).stat().st_size
+    parsed_args.size_in_bits = parsed_args.size_in_bytes * 8
+
+    # bit- and byte-ranges
+    # Note that parse_args() prevents both bits and bytes from being set
+    if parsed_args.bits:
+        bits_start, bits_end = parsed_args.bits
+        bits_end = min(bits_end, parsed_args.size_in_bits)
+        bytes_start = bits_start // 8
+        bytes_end = (bits_end // 8) + 1
+    elif parsed_args.bytes:
+        bytes_start, bytes_end = parsed_args.bytes
+        bytes_end = min(bytes_end, parsed_args.size_in_bytes)
+        bits_start = bytes_start * 8
+        bits_end = (bytes_end) * 8
+    else:  # specifying neither means "the whole Zoon"
+        bits_start, bits_end = 0, parsed_args.size_in_bits
+        bytes_start, bytes_end = 0, parsed_args.size_in_bytes
+
+    parsed_args.bits = Span(bits_start, bits_end)
+    parsed_args.bytes = Span(bytes_start, bytes_end)
+
     return parsed_args
-
-
-def parse_span(bit: str) -> Tuple[int, int]:
-    """parse a span
-    :param str bit: range specified
-    :returns: beginning and end of span
-    :rtype: tuple(int, int)
-    """
-    span = r"(\d*):(\d*)"
-    if not bit:
-        bit = "0:"  # the entire sequence
-    match = re.fullmatch(span, bit)
-    if match:
-        # pull apart "left:right", turn into start and end of range
-        left = match.group(1)
-        if not left:
-            left = "0"
-        start = int(left)
-        right = match.group(2)
-        end = int(right) if right else sys.maxsize
-    elif re.fullmatch(r"\d*", bit):
-        start, end = (int(bit), int(bit) + 1)
-    else:
-        raise TypeError(
-            "--bit argument must be a colon-separated range or a single int"
-        )
-    return (start, end)

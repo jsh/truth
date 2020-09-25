@@ -2,6 +2,7 @@
 """Test utils module."""
 
 import datetime
+import random
 import sys
 
 from run import run
@@ -40,10 +41,7 @@ def test_run_fail() -> None:
         "linux",
     }, "Platform {platform} must be 'darwin' or 'linux'"
 
-    if platform == "linux":
-        assert observed[0] == 2
-    elif platform == "darwin":
-        assert observed[0] == 1
+    assert observed[0] == 1 if platform == "darwin" else 2
     assert observed[1:3] == ("calledprocesserror", "")
     assert "No such file or directory\n" in observed[3]
 
@@ -91,3 +89,12 @@ def test_run_file_not_found() -> None:
         "[Errno 2] No such file or directory: '<>': '<>'",
     )
     assert run("<>") == expected
+
+
+def test_grabbag() -> None:
+    """Run negative exit code."""
+    exit_code = -1 * random.randint(1, 128)
+    returncode = 256 + exit_code
+    expected = (returncode, "calledprocesserror", "", "")
+    command = f"bash -c 'exit {exit_code}'"
+    assert run(command) == expected

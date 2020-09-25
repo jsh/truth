@@ -1,9 +1,18 @@
 #!/usr/bin/env python3
 """Test utils module."""
 
+import os
+import sys
+
 import pytest
 
-from utils import adjusted, excess, to_bytes, toggle_bit_in_byte
+from utils import parsed_span, to_bytes, toggle_bit_in_byte, which
+
+
+def test_which() -> None:
+    """executing which() succeeds"""
+    truepath = which("true")
+    assert os.system(truepath) == 0
 
 
 def test_to_bytes_low() -> None:
@@ -49,15 +58,15 @@ def test_toggle_bit_in_int() -> None:
         toggle_bit_in_byte(0, 256)
 
 
-def test_excess() -> None:
-    """Report excess correctly."""
-    assert excess(16) == 0
-    assert excess(18) == 2
-    assert excess(14) == 6
+def test_parsed_span() -> None:
+    """parsed_span handles all five span types"""
+    assert (0, sys.maxsize) == parsed_span("")
+    assert (69, 70) == parsed_span("69")
+    assert (6, 9) == parsed_span("6:9")
+    assert (69, sys.maxsize) == parsed_span("69:")
+    assert (0, 69) == parsed_span(":69")
+    assert (0, sys.maxsize) == parsed_span(":")
+    # TODO: need a mock to set args.size
 
-
-def test_adjusted() -> None:
-    """Report adjusted byte boundary correctly."""
-    assert adjusted(16) == 16
-    assert adjusted(18) == 16
-    assert adjusted(14) == 8
+    with pytest.raises(TypeError):
+        parsed_span("xxx")

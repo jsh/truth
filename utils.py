@@ -54,24 +54,6 @@ def which(command: str) -> pathlib.Path:
     )
 
 
-def excess(bit: int) -> int:
-    """how far beyond the byte boundary is bit?
-    :param int bit: the bit number
-    :return: the excess
-    :rtype: int
-    """
-    return bit % 8
-
-
-def adjusted(bit: int) -> int:
-    """how far beyond the byte boundary is bit?
-    :param int bit: the bit number
-    :return: bit shifted down to byte boundary
-    :rtype: int
-    """
-    return bit - excess(bit)
-
-
 def parsed_span(span: str) -> Span:
     """parse a span
     :param str bit: range specified

@@ -119,10 +119,8 @@ def test_delete() -> None:
     ten = "00001010"
     zoon_0 = Zoon(one + ten + one, fromfile=False)
     zoon_1 = Zoon(one * 2, fromfile=False)
-    assert zoon_0.delete(8, 16).byteseq == zoon_1.byteseq
-    assert zoon_0.delete(8, 17).byteseq == zoon_1.byteseq
-    assert zoon_0.delete(10, 17).byteseq == zoon_1.byteseq
-    assert zoon_0.delete(6, 17).byteseq != zoon_1.byteseq
-    assert zoon_0.delete(17, 25).byteseq != zoon_1.byteseq
-    assert zoon_0.delete(8, 9).byteseq != zoon_1.byteseq
-    assert zoon_0.delete(0, 7).byteseq != zoon_1.byteseq
+    assert zoon_0.delete(1, 2).byteseq == zoon_1.byteseq
+    assert zoon_0.delete(0, 1).byteseq != zoon_1.byteseq
+    assert zoon_0.delete(2, 3).byteseq != zoon_1.byteseq
+    assert zoon_0.delete(0, 2).byteseq != zoon_1.byteseq
+    assert zoon_0.delete(0, 3).byteseq != zoon_1.byteseq

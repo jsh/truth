@@ -7,7 +7,7 @@
 128 - Invalid argument to exit
 128+n - Fatal error signal “n”
 130 - Script terminated by Control-C
--1 - Same as 254 == -1 mod 256
+-1 - Same as 255 == -1 mod 256
 > 255 - Exit status out of range
 
 See https://tldp.org/LDP/abs/html/exitcodes.html
@@ -41,7 +41,7 @@ def run(command: str, timeout: int = 1) -> Result:
             universal_newlines=True,
             check=True,
         )
-        returncode = output.returncode
+        returncode = output.returncode % 256
         outcome = "success"
         out = output.stdout
         err = output.stderr
@@ -55,24 +55,14 @@ def run(command: str, timeout: int = 1) -> Result:
         outcome = "permissionerror"
         out = ""
         err = str(exc)
-    except subprocess.CalledProcessError as exc:
-        returncode = exc.returncode
-        outcome = "calledprocesserror"
-        out = exc.stdout
-        err = exc.stderr
-    except OSError as exc:
-        returncode = -2
-        outcome = "oserror"
-        out = ""
-        err = str(exc)
     except subprocess.TimeoutExpired:
         returncode = 124
         outcome = "timeoutexpired"
         out = ""
         err = ""
-    except Exception as exc:  # some other misfortune
-        returncode = -1
-        outcome = "exception"
-        out = ""
-        err = str(exc)
+    except subprocess.CalledProcessError as exc:  # a grab-bag on OSX
+        returncode = exc.returncode
+        outcome = "calledprocesserror"
+        out = exc.stdout
+        err = exc.stderr
     return (returncode, outcome, out, err)

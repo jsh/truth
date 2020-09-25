@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, List, Tuple
 
 import run
-from utils import adjusted, excess, to_bytes, toggle_bit_in_byte
+from utils import to_bytes, toggle_bit_in_byte
 
 Result = Tuple[int, str, str, str]
 
@@ -108,26 +108,15 @@ class Zoon:
 
     def delete(self, start: int, stop: int) -> Any:  # TODO: Optional[Zoon]?
         """Delete slice from start to stop
-        :param int start: starting bit
-        :param int stop: end bit (open interval)
+        :param int start: starting byte
+        :param int stop: end byte (open interval)
         :returns: mutant
         :rtype: zoon.Zoon
         TODO: range checks
         """
         mutant = Zoon(self, fromfile=False)
         byteseq = mutant.byteseq
-        if excess(start):
-            requested_start = start
-            start = adjusted(start)
-            print(f"start must be at byte boundary. {requested_start} -> {start}")
-        if excess(stop):
-            requested_stop = stop
-            stop = adjusted(stop)
-            print(f"stop must be at byte boundary. {requested_stop} -> {stop}")
-
-        start_byte = start // 8
-        stop_byte = stop // 8
-        mutant.byteseq = byteseq[:start_byte] + byteseq[stop_byte:]
+        mutant.byteseq = byteseq[:start] + byteseq[stop:]
         return mutant
 
     # nothing below this implemented
