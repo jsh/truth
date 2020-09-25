@@ -35,7 +35,8 @@ pylint:
 	pylint --disable=fixme -rn ${SOURCES} | sort -t: -k2 -n -r
 
 test:
-	PYTHONPATH=:${PWD} pytest
+	# PYTHONPATH=:${PWD} pytest
+	pytest
 
 
 .PHONY: all black clean fixme lint mypy pylint pylama isort test
