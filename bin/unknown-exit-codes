@@ -1,0 +1,12 @@
+#!/bin/bash -eu
+
+cat ${1:-} |
+awk '
+	$2 != 0 &&   # success
+	$2 != 1 &&   # general error
+	$2 != 2 &&   # file not found
+	$2 != 124 && # timeout
+	$2 != 126 && # permission or OSError
+	$2 > 0    && # signal
+	$2 != 127    # mystery
+'
