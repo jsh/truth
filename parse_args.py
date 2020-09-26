@@ -3,6 +3,7 @@
 
 import argparse
 import collections
+import sys
 from pathlib import Path
 from typing import List, Optional
 
@@ -45,7 +46,8 @@ def get_args(
         args = []
 
     parsed_args = parser.parse_args(args)
-    print(parsed_args)
+    if parsed_args.verbose:
+        print(parsed_args, file=sys.stderr)
 
     # attribute validatation and enhancement
     # TODO: I could do file work with type=, too.
