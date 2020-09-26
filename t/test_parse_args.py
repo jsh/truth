@@ -2,8 +2,9 @@
 """Test parse_args module.
 Modeled on https://bit.ly/35u38gV
 """
+# TODO: fix mypy/pytest in a better way
 
-import pytest
+import pytest  # type: ignore
 
 from parse_args import get_args
 from utils import which

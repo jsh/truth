@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test utils module."""
+"""Test run module."""
 
 import datetime
 import random
@@ -89,6 +89,13 @@ def test_run_file_not_found() -> None:
         "[Errno 2] No such file or directory: '<>': '<>'",
     )
     assert run("<>") == expected
+
+
+def test_run_oserror() -> None:
+    """run something not a file produces OSError."""
+    # TODO: create the executable and put in a temporary directory
+    expected = (126, "oserror", "", "[Errno 8] Exec format error: 't/bin/badexe'")
+    assert run("t/bin/badexe") == expected
 
 
 def test_grabbag() -> None:

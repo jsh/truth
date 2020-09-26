@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Test utils module."""
+# TODO: fix mypy/pytest in a better way
 
 import os
 import sys
 
-import pytest
+import pytest  # type: ignore
 
 from utils import parsed_span, to_bytes, toggle_bit_in_byte, which
 
