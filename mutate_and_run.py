@@ -47,8 +47,9 @@ def main(argv: list) -> None:
     args = get_args(
         "Brute-force survey of point mutants, every site in a span.", argv[1:]
     )
-    print(args, file=sys.stderr)
-    mutate_and_run(args.wild_type, args.start, args.end, verbose=args.verbose)
+    if args.verbose:
+        print(args, file=sys.stderr)
+    mutate_and_run(args.wild_type, args.bits.start, args.bits.end, verbose=args.verbose)
 
 
 if __name__ == "__main__":
