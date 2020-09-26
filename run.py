@@ -50,19 +50,34 @@ def run(command: str, timeout: int = 1) -> Result:
         outcome = "filenotfounderror"
         out = ""
         err = str(exc)
-    except PermissionError as exc:
-        returncode = 126
-        outcome = "permissionerror"
-        out = ""
-        err = str(exc)
     except subprocess.TimeoutExpired:
         returncode = 124
         outcome = "timeoutexpired"
         out = ""
         err = ""
+    except PermissionError as exc:
+        returncode = 126
+        outcome = "permissionerror"
+        out = ""
+        err = str(exc)
+    except OSError as exc:
+        returncode = 126
+        outcome = "oserror"
+        out = ""
+        err = str(exc)
     except subprocess.CalledProcessError as exc:  # a grab-bag on OSX
         returncode = exc.returncode
         outcome = "calledprocesserror"
-        out = exc.stdout
-        err = exc.stderr
+        out = ""
+        err = str(exc)
+        if -32 < returncode < 0 and "Signals" in str(exc): # a signal
+                outcome = f"signal{abs(returncode)}"
+        else:
+            returncode = returncode % 128
+    except Exception as exc:
+        returncode = 127  # really, unknown, but has to be something
+        outcome = "unknownerror"
+        out = ""
+        err = str(exc)
+
     return (returncode, outcome, out, err)
