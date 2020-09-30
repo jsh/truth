@@ -41,6 +41,7 @@ def get_args(
         help="un-mutated executable (default: %(default)s)",
     )
     parser.add_argument("--verbose", help="be extra chatty", action="store_true")
+    parser.add_argument('--mutant', type=argparse.FileType("wb", bufsize=0), default="bin/mutant")
     assert description, "executable description required"
     if args is None:
         args = []
