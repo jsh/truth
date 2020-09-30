@@ -70,8 +70,8 @@ def run(command: str, timeout: int = 1) -> Result:
         outcome = "calledprocesserror"
         out = ""
         err = str(exc)
-        if -32 < returncode < 0 and "Signals" in str(exc): # a signal
-                outcome = f"signal{abs(returncode)}"
+        if -32 < returncode < 0 and "Signals" in str(exc):  # a signal
+            outcome = f"signal{abs(returncode)}"
         else:
             returncode = returncode % 128
     except Exception as exc:

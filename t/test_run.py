@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
+# /!/usr/bin/env python3
 """Test run module."""
 
 import datetime
-import random
 import sys
 
 from run import run
@@ -19,7 +18,12 @@ def test_run_test_true() -> None:
 
 def test_run_test_false() -> None:
     """simple failure"""
-    expected = (1, "calledprocesserror", "", "")
+    expected = (
+        1,
+        "calledprocesserror",
+        "",
+        "Command '['/usr/bin/false']' returned non-zero exit status 1.",
+    )
     assert run(str(which("false"))) == expected
 
 
@@ -43,7 +47,11 @@ def test_run_fail() -> None:
 
     assert observed[0] == 1 if platform == "darwin" else 2
     assert observed[1:3] == ("calledprocesserror", "")
-    assert "No such file or directory\n" in observed[3]
+    expected = "Command '['ls', '/u/jane/me/tarzan']' returned non-zero exit status 1."
+    if platform == "darwin":
+        assert observed[3] == expected
+    else:
+        assert "No such file or directory\n" in observed[3]
 
 
 def test_run_badpath() -> None:
@@ -98,10 +106,21 @@ def test_run_oserror() -> None:
     assert run("t/bin/badexe") == expected
 
 
-def test_grabbag() -> None:
-    """Run negative exit code."""
-    exit_code = -1 * random.randint(1, 128)
-    returncode = 256 + exit_code
-    expected = (returncode, "calledprocesserror", "", "")
-    command = f"bash -c 'exit {exit_code}'"
-    assert run(command) == expected
+def test_run_with_args() -> None:
+    """run something with args"""
+    output_lines = [
+        "true (GNU coreutils) 8.32",
+        "Copyright (C) 2020 Free Software Foundation, Inc.",
+        (
+            "License GPLv3+: GNU GPL version 3 or later"
+            " <https://gnu.org/licenses/gpl.html>."
+        ),
+        "This is free software: you are free to change and redistribute it.",
+        "There is NO WARRANTY, to the extent permitted by law.",
+        "",
+        "Written by Jim Meyering.",
+        "",
+    ]
+    output_msg = "\n".join(output_lines)
+    expected = (0, "success", output_msg, "")
+    assert run(str("gtrue --version")) == expected
