@@ -2,8 +2,8 @@
 """Drive the truth."""
 
 import sys
-from typing import Tuple
 from pathlib import Path
+from typing import Tuple
 
 from parse_args import get_args
 
@@ -21,7 +21,8 @@ def main(argv: list) -> None:
     if args.verbose:
         print(args, file=sys.stderr)
     args.mutant.write(b"hello\n")
-    print(Path("bin/mutant").stat().st_size)
+    print(args.mutant.name)
+    print(Path(args.mutant.name).stat().st_size)
 
 
 if __name__ == "__main__":

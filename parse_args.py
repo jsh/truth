@@ -4,6 +4,7 @@
 import argparse
 import collections
 import sys
+import tempfile
 from pathlib import Path
 from typing import List, Optional
 
@@ -41,7 +42,11 @@ def get_args(
         help="un-mutated executable (default: %(default)s)",
     )
     parser.add_argument("--verbose", help="be extra chatty", action="store_true")
-    parser.add_argument('--mutant', type=argparse.FileType("wb", bufsize=0), default="bin/mutant")
+    parser.add_argument(
+        "--mutant",
+        type=argparse.FileType("wb", bufsize=0),
+        default=tempfile.NamedTemporaryFile().name,
+    )
     assert description, "executable description required"
     if args is None:
         args = []
@@ -51,8 +56,9 @@ def get_args(
         print(parsed_args, file=sys.stderr)
 
     # attribute validatation and enhancement
-    # TODO: I could do file work with type=, too.
     assert Path(parsed_args.wild_type).is_file(), f"No file {parsed_args.wild_type}"
+    parsed_args.mutant_path = Path(parsed_args.mutant.name)
+    parsed_args.mutant_path.chmod(0o755)  # going to run it once it's written.
 
     # sizes
     parsed_args.size_in_bytes = Path(parsed_args.wild_type).stat().st_size
