@@ -43,9 +43,8 @@ def get_args(
     )
     parser.add_argument("--verbose", help="be extra chatty", action="store_true")
     parser.add_argument(
-        "--mutant",
-        type=argparse.FileType("wb", bufsize=0),
-        default=tempfile.NamedTemporaryFile().name,
+        "--mutants",
+        help="directory to store mutants"
     )
     assert description, "executable description required"
     if args is None:
@@ -57,8 +56,6 @@ def get_args(
 
     # attribute validatation and enhancement
     assert Path(parsed_args.wild_type).is_file(), f"No file {parsed_args.wild_type}"
-    parsed_args.mutant_path = Path(parsed_args.mutant.name)
-    parsed_args.mutant_path.chmod(0o755)  # going to run it once it's written.
 
     # sizes
     parsed_args.size_in_bytes = Path(parsed_args.wild_type).stat().st_size
