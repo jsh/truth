@@ -120,12 +120,6 @@ def test_run_with_args() -> None:
     """Run something with args"""
 
     output_lines = [
-        (
-            "License GPLv3+: GNU GPL version 3 or later"
-            " <https://gnu.org/licenses/gpl.html>."
-        ),
-        "This is free software: you are free to change and redistribute it.",
-        "There is NO WARRANTY, to the extent permitted by law.",
         "",
         "Written by Jim Meyering.",
         "",
