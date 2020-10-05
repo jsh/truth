@@ -21,30 +21,6 @@ def main(argv: list) -> None:
     )
     if args.verbose:
         print(args, file=sys.stderr)
-    # print(args.mutants)
-    # if args.mutants:
-    #     mutants_name = args.mutants
-    # else:
-    #     mutants_name = tempfile.mkdtemp()
-
-    # mutant_name = tempfile.NamedTemporaryFile(dir=mutants_name).name
-    # print("dir = ", mutants_name, "type= ", type(mutants_name))
-    # print("file = ", mutant_name, "type = ", type(mutant_name))
-    # mutant_path = Path(mutant_name)
-    # mutant_path.write_bytes(b"hello\n")
-    # mutant_path.chmod(0o755)
-    # mutant2_name = tempfile.NamedTemporaryFile(dir=mutants_name).name
-    # print("file = ", mutant2_name, "type = ", type(mutant2_name))
-    # mutant2_path = Path(mutant2_name)
-    # mutant2_path.write_bytes(b"hello\n")
-
-    # print(mutant_path.stat().st_size)
-    # print(mutant2_path.stat().st_size)
-
 
 if __name__ == "__main__":
     main(sys.argv)
-    # try:
-    #     main(sys.argv)
-    # except Exception as exc:
-    #     print(f"Unexpected exception: {str(exc)}")
