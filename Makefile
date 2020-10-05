@@ -29,7 +29,7 @@ mypy:
 	mypy ${PWD}
 
 pylama:
-	pylama ${SOURCES}
+	pylama -o .config/pylama ${SOURCES}
 
 pylint:
 	pylint --disable=fixme -rn ${SOURCES} | sort -t: -k2 -n -r
