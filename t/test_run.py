@@ -73,7 +73,9 @@ def test_run_badpath() -> None:
         "",
         f"[Errno 2] No such file or directory: '{BADPATH}'",
     )
-    assert run(BADPATH) == expected
+    observed = run(BADPATH)
+    assert observed[:2] == expected[:2]
+    assert expected[3] in observed[3]
 
 
 def test_run_timeout() -> None:
@@ -102,7 +104,9 @@ def test_run_permission_denied() -> None:
 def test_run_file_not_found() -> None:
     """Run something not a file produces filenotfounderror."""
     expected = (2, "filenotfounderror", "", "[Errno 2] No such file or directory: '<>'")
-    assert run("<>") == expected
+    observed = run("<>")
+    assert observed[:2] == expected[:2]
+    assert expected[3] in observed[3]
 
 
 # def test_run_oserror() -> None:
