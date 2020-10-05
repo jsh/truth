@@ -120,8 +120,6 @@ def test_run_with_args() -> None:
     """Run something with args"""
 
     output_lines = [
-        "true (GNU coreutils) 8.32",
-        "Copyright (C) 2020 Free Software Foundation, Inc.",
         (
             "License GPLv3+: GNU GPL version 3 or later"
             " <https://gnu.org/licenses/gpl.html>."
@@ -134,7 +132,12 @@ def test_run_with_args() -> None:
     ]
     output_msg = "\n".join(output_lines)
     expected = (0, "success", output_msg, "")
+    # check stdout
     if platform() == "darwin":
-        assert run(str("gtrue --version")) == expected
+        observed = run(str("gtrue --version"))
     else:
-        assert run(str("true --version")) == expected
+        observed = run(str("true --version"))
+    assert expected[2] in observed[2]
+    # check the rest
+    for field in [0, 1, 3]:
+        assert expected[field] == observed[field]
