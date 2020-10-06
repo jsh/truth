@@ -41,16 +41,25 @@ def bit_and_byte_ranges(parsed_args: argparse.Namespace) -> Tuple[Span, Span]:
 
 def output_paths(parsed_args: argparse.Namespace):
     """
-    some damn string
+    Where to put mutant(s).
+    If neither "mutants" (directory) nor mutant (file) is specified,
+    put everything in a temporary directory.
+    If the directory doesn't exist, create it.
+    If it's a temporary directory, cleanup at exit.
     :param argparse.Namespace parsed_args: parsed args
+    :return: path to directory (made if it doesn't exist) and basename
+    :rtype: tuple[Path, Path]
     """
     if parsed_args.mutant:  # name file to keep it in a particular place
-        basepath = Path(parsed_args.mutant)
-        dirpath = basepath.parent
-    elif parsed_args.mutants:  # random filename in named directory
+        mutant_path = Path(parsed_args.mutant)
+        dirpath = mutant_path.parent
+        dirpath.mkdir(exist_ok=True)
+        basepath = mutant_path.name
+    elif parsed_args.mutants:  # random filename(s) in named directory
         dirpath = Path(parsed_args.mutants)
-        basepath = Path(tempfile.NamedTemporaryFile(dir=parsed_args.mutants).name)
-    else:  # one or more temporary files in temporary directory
+        dirpath.mkdir(exist_ok=True)
+        basepath = None
+    else:  # one or more tempfiles in temporary directory
         dirpath = Path(tempfile.mkdtemp())
         atexit.register(shutil.rmtree, dirpath)  # cleanup on exit
         basepath = None
@@ -75,23 +84,27 @@ def get_args(
       - bytes: byte-range of interest (Span)
       This is a little redundant, but it's convenient and simplifies other code.
     """
+    if args is None:
+        args = []
+
+    assert description, "executable description required"
 
     parser = argparse.ArgumentParser(description=description)
-    bits_or_bytes = parser.add_mutually_exclusive_group()
-    bits_or_bytes.add_argument("--bits", help="bit(s) of interest", type=parsed_span)
-    bits_or_bytes.add_argument("--bytes", help="bytes(s) of interest", type=parsed_span)
     parser.add_argument(
         "--wild_type",
         default=which("true"),
         help="un-mutated executable (default: %(default)s)",
     )
+    parser.add_argument("--cmd_args", help="args for the executable(s)")
     parser.add_argument("--verbose", help="be extra chatty", action="store_true")
+
+    bits_or_bytes = parser.add_mutually_exclusive_group()
+    bits_or_bytes.add_argument("--bits", help="bit(s) of interest", type=parsed_span)
+    bits_or_bytes.add_argument("--bytes", help="bytes(s) of interest", type=parsed_span)
+
     mutant_or_mutants = parser.add_mutually_exclusive_group()
     mutant_or_mutants.add_argument("--mutant", help="file to store mutant")
     mutant_or_mutants.add_argument("--mutants", help="directory to store mutants")
-    assert description, "executable description required"
-    if args is None:
-        args = []
 
     parsed_args = parser.parse_args(args)
     if parsed_args.verbose:

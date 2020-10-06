@@ -2,8 +2,6 @@
 """Drive the truth."""
 
 import sys
-import tempfile
-from pathlib import Path
 from typing import Tuple
 
 from parse_args import get_args
@@ -21,6 +19,7 @@ def main(argv: list) -> None:
     )
     if args.verbose:
         print(args, file=sys.stderr)
+
 
 if __name__ == "__main__":
     main(sys.argv)
