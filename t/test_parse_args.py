@@ -77,14 +77,14 @@ def test_argument_mutants() -> None:
     parser = get_args("Testing mutants", ["--mutants=foo"])
     assert str(parser.dirpath) == "foo"
     assert parser.dirpath.is_dir()
-    assert parser.basepath == None
+    assert not parser.basepath
 
 
 def test_argument_no_path() -> None:
     """get_args understands no specified path"""
     parser = get_args("Testing neither mutant nor mutants")
     assert parser.dirpath.is_dir()
-    assert parser.basepath == None
+    assert not parser.basepath
 
 
 def test_help() -> None:

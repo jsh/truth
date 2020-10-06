@@ -58,11 +58,11 @@ def output_paths(parsed_args: argparse.Namespace):
     elif parsed_args.mutants:  # random filename(s) in named directory
         dirpath = Path(parsed_args.mutants)
         dirpath.mkdir(exist_ok=True)
-        basepath = None
+        basepath = ""
     else:  # one or more tempfiles in temporary directory
         dirpath = Path(tempfile.mkdtemp())
         atexit.register(shutil.rmtree, dirpath)  # cleanup on exit
-        basepath = None
+        basepath = ""
     return basepath, dirpath
 
 
