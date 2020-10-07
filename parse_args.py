@@ -19,6 +19,7 @@ def bit_and_byte_ranges(parsed_args: argparse.Namespace) -> Tuple[Span, Span]:
     :rtype: Tuple[Span, Span]
     Note that parse_args() prevents both bits and bytes from being set
     """
+    # TODO: fix negative range handling.
     if parsed_args.bits:
         bits_start, bits_end = parsed_args.bits
         bits_end = min(bits_end, parsed_args.size_in_bits)
