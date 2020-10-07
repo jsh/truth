@@ -2,6 +2,7 @@
 """An executable, treated like a living entity."""
 
 import array
+import tempfile
 from pathlib import Path
 from typing import Any, List, Tuple
 
@@ -65,11 +66,16 @@ class Zoon:
         """return something that looks just like the object."""
         return f"zoon.Zoon('{self._initializer}', fromfile={self._fromfile})"
 
-    def write(self, filename: Path) -> None:
+    def write(self, path: Path) -> None:
         """Write Zoon to file.
-        :param str filename: The name of the file to write.
+        Given a directory, create a random filename
+        Given a filename, create that file
+        Dirname of disk representation must exist.
+        :param str path: The path to write to.
         """
-        with open(filename, "wb") as fout:
+        if path.is_dir():
+            path = tempfile.NamedTemporaryFile(dir=path).name
+        with open(path, "wb") as fout:
             self.__byteseq.tofile(fout)
 
     def mutate(self, position: int) -> Any:  # TODO: Zoon?

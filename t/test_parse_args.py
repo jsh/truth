@@ -68,23 +68,22 @@ def test_argument_mutant_and_mutants() -> None:
 def test_argument_mutant() -> None:
     """get_args understands --mutant"""
     parser = get_args("Testing mutant", ["--mutant=/etc/bar"])
-    assert str(parser.dirpath) == "/etc"
-    assert str(parser.basepath) == "bar"
+    assert parser.mutant == "/etc/bar"
+    assert not parser.mutants
 
 
 def test_argument_mutants() -> None:
     """get_args understands --mutants"""
-    parser = get_args("Testing mutants", ["--mutants=foo"])
-    assert str(parser.dirpath) == "foo"
-    assert parser.dirpath.is_dir()
-    assert not parser.basepath
+    parser = get_args("Testing mutants", ["--mutants=/etc"])
+    assert not parser.mutant
+    assert str(parser.mutants) == "/etc"
 
 
 def test_argument_no_path() -> None:
     """get_args understands no specified path"""
     parser = get_args("Testing neither mutant nor mutants")
-    assert parser.dirpath.is_dir()
-    assert not parser.basepath
+    assert not parser.mutant
+    assert not parser.mutants
 
 
 def test_help() -> None:

@@ -97,6 +97,22 @@ def test_write_missing(tmp_path) -> None:
     assert bit_path.read_bytes() == to_bytes(bit_string)
 
 
+def test_write_bad_dir() -> None:
+    """Write to a non-existent path."""
+    zoon = Zoon(TRUE)
+    with pytest.raises(FileNotFoundError):
+        zoon.write(Path("/u/jane/me/tarzan"))
+
+
+def test_write_temp_file(tmp_path) -> None:
+    """Write to a temporary file."""
+    zoon = Zoon(TRUE)
+    assert tmp_path.is_dir()
+    assert len(list(tmp_path.iterdir())) == 0
+    zoon.write(tmp_path)
+    assert len(list(tmp_path.iterdir())) == 1
+
+
 def test_mutate() -> None:
     """Mutate a bit in a Zoon"""
     zoon_0 = Zoon("00000000", fromfile=False)
