@@ -60,8 +60,7 @@ def main(argv: list) -> None:
 
 
 if __name__ == "__main__":
-    main(sys.argv)
-    # try:
-    #     main(sys.argv)
-    # except Exception as exc:
-    #     print(f"Unexpected exception: {str(exc)}")
+    try:
+        main(sys.argv)
+    except Exception as exc:
+        print(f"Unexpected exception: {str(exc)}")
