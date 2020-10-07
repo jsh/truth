@@ -3,10 +3,10 @@
 
 import argparse
 import atexit
-from pathlib import Path
 import shutil
 import sys
 import tempfile
+from pathlib import Path
 
 from parse_args import get_args
 from zoon import Zoon
@@ -20,12 +20,12 @@ def delete_range_and_run(args: argparse.Namespace) -> None:
     """
 
     zoon = Zoon(args.wild_type)
-    if args.mutant:                  # name the file
+    if args.mutant:  # name the file
         where = Path(args.mutant)
-    elif args.mutants:              # name the directory
+    elif args.mutants:  # name the directory
         where = Path(args.mutants)
-    else:   # neither specified
-        tempdir= tempfile.mkdtemp()   # use a temporary directory, then cleanup
+    else:  # neither specified
+        tempdir = tempfile.mkdtemp()  # use a temporary directory, then cleanup
         atexit.register(shutil.rmtree, tempdir)
         where = Path(tempdir)
     start, end = args.bytes.start, args.bytes.end

@@ -2,10 +2,10 @@
 """Drive the truth."""
 
 import atexit
-import sys
-from pathlib import Path
 import shutil
+import sys
 import tempfile
+from pathlib import Path
 from typing import Tuple
 
 from parse_args import get_args
@@ -19,12 +19,12 @@ def mutate_and_run(args) -> None:
     :param args.Namespace args: All the args
     """
     zoon = Zoon(args.wild_type)
-    if args.mutant:                  # name the file
+    if args.mutant:  # name the file
         where = Path(args.mutant)
-    elif args.mutants:              # name the directory
+    elif args.mutants:  # name the directory
         where = Path(args.mutants)
-    else:   # neither specified
-        tempdir= tempfile.mkdtemp()   # use a temporary directory, then cleanup
+    else:  # neither specified
+        tempdir = tempfile.mkdtemp()  # use a temporary directory, then cleanup
         atexit.register(shutil.rmtree, tempdir)
         where = Path(tempdir)
     for bit in range(args.bits.start, args.bits.end):
