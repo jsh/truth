@@ -123,11 +123,11 @@ def test_mutate() -> None:
     assert new_zoon.byteseq == zoon_0.byteseq
 
 
-def test_run() -> None:
+def test_run(tmp_path) -> None:
     """Run a zoon"""
     expected = (0, "success", "", "")
     zoon = Zoon(TRUE)
-    assert zoon.run() == expected
+    assert zoon.run(tmp_path) == expected
 
 
 def test_delete() -> None:

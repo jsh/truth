@@ -66,17 +66,21 @@ class Zoon:
         """return something that looks just like the object."""
         return f"zoon.Zoon('{self._initializer}', fromfile={self._fromfile})"
 
-    def write(self, path: Path) -> None:
+    def write(self, where: Path) -> Path:
         """Write Zoon to file.
         Given a directory, create a random filename
         Given a filename, create that file
         Dirname of disk representation must exist.
         :param str path: The path to write to.
+        :return: path to written filename
         """
-        if path.is_dir():
-            path = tempfile.NamedTemporaryFile(dir=path).name
+        if where.is_dir():
+            path = Path(tempfile.NamedTemporaryFile(dir=where).name)
+        else:
+            path = where
         with open(path, "wb") as fout:
             self.__byteseq.tofile(fout)
+        return path
 
     def mutate(self, position: int) -> Any:  # TODO: Zoon?
         """Point-mutate Zoon bytes at the given position.
@@ -92,24 +96,19 @@ class Zoon:
         mutant.byteseq[byte] = toggle_bit_in_byte(7 - bit, mutant.byteseq[byte])
         return mutant
 
-    def run(self, timeout: int = 1, args: str = "") -> Result:
-        """Run the Zoon.
+    def run(self, where, cmd_args: str = "", timeout: int = 1) -> Result:
+        """Run the Zoon with the given args for timeout seconds, max
+        :param pathlib.Path where: where to write and run the Zoon
+        :param str cmd_args: what to pass the Zoon as args
         :param int timeout: timeout in seconds
-        :param bool output: provide output
         :raises: Exception if timeout
         :return: the exit status, optionally the output
         :rtype: tuple(int, str, str, str)
-        run for timeout seconds, max
         """
         assert timeout > 0
-        output_dir = Path("bin")
-        output_dir.mkdir(exist_ok=True)
-        mutant_path = (
-            output_dir / "mutant"
-        )  # could be a tempfile, but it's useful to keep the last one
-        self.write(mutant_path)
-        mutant_path.chmod(0o755)
-        command = "%s %s" % (mutant_path, args) if args else str(mutant_path)
+        path = self.write(where)
+        path.chmod(0o755)
+        command = "%s %s" % (path, cmd_args)
         return run.run(command, timeout=timeout)
 
     def delete(self, start: int, stop: int) -> Any:  # TODO: Optional[Zoon]?
