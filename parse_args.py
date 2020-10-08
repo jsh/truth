@@ -47,7 +47,8 @@ def get_args(
     :rtype: argparse.Namespace
 
     When this finishes we return a Namespace that has these attributes
-      - verbose: how chatty to be (Bool)
+      - verbose: how chatty to be (bool)
+      - threads: number of threads (int) [default: 1]
       - wild_type: path to executable being considered (e.g., "/usr/bin/true"). [Must exist.]
       - bit_size: size of wild_type, in bits (int)
       - byte_size: size of wild_type, in bytes (int)
@@ -64,6 +65,12 @@ def get_args(
     assert description, "executable description required"
 
     parser = argparse.ArgumentParser(description=description)
+
+    parser.add_argument("--verbose", help="be extra chatty", action="store_true")
+    parser.add_argument(
+        "--threads", default=1, type=int, help="number of concurrent threads"
+    )
+
     parser.add_argument(
         "--wild_type",
         default=which("true"),
@@ -75,7 +82,6 @@ def get_args(
     mutant_or_mutants.add_argument("--mutants", help="directory to store mutants")
 
     parser.add_argument("--cmd_args", help="args for the executable(s)")
-    parser.add_argument("--verbose", help="be extra chatty", action="store_true")
 
     bits_or_bytes = parser.add_mutually_exclusive_group()
     bits_or_bytes.add_argument("--bits", help="bit(s) of interest", type=parsed_span)

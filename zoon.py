@@ -85,6 +85,7 @@ class Zoon:
     def mutate_and_run(
         self, position: int, fs_path: Path, cmd_args: str = "", timeout: int = 1
     ) -> Any:  # TODO: Zoon?
+        """Mutate, then run.  Just what it sounds like."""
         mutant = self.mutate(position)
         return mutant.run(fs_path, cmd_args, timeout)
 
