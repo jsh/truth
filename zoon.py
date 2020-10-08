@@ -66,7 +66,7 @@ class Zoon:
         """return something that looks just like the object."""
         return f"zoon.Zoon('{self._initializer}', fromfile={self._fromfile})"
 
-    def write(self, where: Path) -> Path:
+    def write(self, fs_path: Path) -> Path:
         """Write Zoon to file.
         Given a directory, create a random filename
         Given a filename, create that file
@@ -74,13 +74,19 @@ class Zoon:
         :param str path: The path to write to.
         :return: path to written filename
         """
-        if where.is_dir():
-            path = Path(tempfile.NamedTemporaryFile(dir=where).name)
+        if fs_path.is_dir():
+            file_path = Path(tempfile.NamedTemporaryFile(dir=fs_path).name)
         else:
-            path = where
-        with open(path, "wb") as fout:
+            file_path = fs_path
+        with open(file_path, "wb") as fout:
             self.__byteseq.tofile(fout)
-        return path
+        return file_path
+
+    def mutate_and_run(
+        self, position: int, fs_path: Path, cmd_args: str = "", timeout: int = 1
+    ) -> Any:  # TODO: Zoon?
+        mutant = self.mutate(position)
+        return mutant.run(fs_path, cmd_args, timeout)
 
     def mutate(self, position: int) -> Any:  # TODO: Zoon?
         """Point-mutate Zoon bytes at the given position.
@@ -96,9 +102,9 @@ class Zoon:
         mutant.byteseq[byte] = toggle_bit_in_byte(7 - bit, mutant.byteseq[byte])
         return mutant
 
-    def run(self, where, cmd_args: str = "", timeout: int = 1) -> Result:
+    def run(self, fs_path: Path, cmd_args: str = "", timeout: int = 1) -> Result:
         """Run the Zoon with the given args for timeout seconds, max
-        :param pathlib.Path where: where to write and run the Zoon
+        :param pathlib.Path filepath: where to write and run the Zoon
         :param str cmd_args: what to pass the Zoon as args
         :param int timeout: timeout in seconds
         :raises: Exception if timeout
@@ -106,9 +112,9 @@ class Zoon:
         :rtype: tuple(int, str, str, str)
         """
         assert timeout > 0
-        path = self.write(where)
-        path.chmod(0o755)
-        command = "%s %s" % (path, cmd_args)
+        file_path = self.write(fs_path)
+        file_path.chmod(0o755)
+        command = "%s %s" % (file_path, cmd_args)
         return run.run(command, timeout=timeout)
 
     def delete(self, start: int, stop: int) -> Any:  # TODO: Optional[Zoon]?

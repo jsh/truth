@@ -14,22 +14,22 @@ from zoon import Zoon
 Result = Tuple[int, str, str, str]
 
 
-def mutate_and_run(args) -> None:
+def survey_range(args) -> None:
     """Mutatate the wild type at each bit in a range and capture the results.
     :param args.Namespace args: All the args
     """
     zoon = Zoon(args.wild_type)
+    cmd_args = args.cmd_args
     if args.mutant:  # name the file
-        where = Path(args.mutant)
+        fs_path = Path(args.mutant)
     elif args.mutants:  # name the directory
-        where = Path(args.mutants)
+        fs_path = Path(args.mutants)
     else:  # neither specified
         tempdir = tempfile.mkdtemp()  # use a temporary directory, then cleanup
         atexit.register(shutil.rmtree, tempdir)
-        where = Path(tempdir)
+        fs_path = Path(tempdir)
     for bit in range(args.bits.start, args.bits.end):
-        mutant = zoon.mutate(bit)
-        result = mutant.run(where)
+        result = zoon.mutate_and_run(position=bit, fs_path=fs_path, cmd_args=cmd_args)
         report(result, bit, verbose=args.verbose)
 
 
@@ -56,7 +56,7 @@ def main(argv: list) -> None:
     )
     if args.verbose:
         print(args, file=sys.stderr)
-    mutate_and_run(args)
+    survey_range(args)
 
 
 if __name__ == "__main__":
