@@ -10,13 +10,12 @@ import pytest  # type: ignore
 from utils import to_bytes, which
 from zoon import Zoon
 
-TRUE = which("true")
-
 
 def test_init_from_file() -> None:
     """__init__() works correctly from string"""
-    zoon = Zoon(TRUE)
-    assert "%r" % zoon == f"zoon.Zoon('{TRUE}', fromfile=True)"
+    true = which("true")
+    zoon = Zoon(true)
+    assert "%r" % zoon == f"zoon.Zoon('{true}', fromfile=True)"
 
 
 def test_init_from_string() -> None:
@@ -66,8 +65,9 @@ def test_string_len() -> None:
 
 def test_file_len() -> None:
     """len() works correctly on Zoon from file"""
-    zoon = Zoon(TRUE)
-    assert len(zoon) == Path(TRUE).stat().st_size * 8
+    true = which("true")
+    zoon = Zoon(true)
+    assert len(zoon) == Path(true).stat().st_size * 8
 
 
 def test_write_low(tmp_path) -> None:
@@ -99,14 +99,16 @@ def test_write_missing(tmp_path) -> None:
 
 def test_write_bad_dir() -> None:
     """Write to a non-existent path."""
-    zoon = Zoon(TRUE)
+    true = which("true")
+    zoon = Zoon(true)
     with pytest.raises(FileNotFoundError):
         zoon.write(Path("/u/jane/me/tarzan"))
 
 
 def test_write_temp_file(tmp_path) -> None:
     """Write to a temporary file."""
-    zoon = Zoon(TRUE)
+    true = which("true")
+    zoon = Zoon(true)
     assert tmp_path.is_dir()
     assert len(list(tmp_path.iterdir())) == 0
     zoon.write(tmp_path)
@@ -126,7 +128,8 @@ def test_mutate() -> None:
 def test_run(tmp_path) -> None:
     """Run a zoon"""
     expected = (0, "success", "", "")
-    zoon = Zoon(TRUE)
+    true = which("true")
+    zoon = Zoon(true)
     assert zoon.run(tmp_path) == expected
 
 
@@ -142,8 +145,9 @@ def test_delete() -> None:
     assert zoon_0.delete(0, 2).byteseq != zoon_1.byteseq
     assert zoon_0.delete(0, 3).byteseq != zoon_1.byteseq
 
-def test_mutate_and_run() -> None:
+
+def test_mutate_and_run(tmpdir) -> None:
     """mutate_and_run does that"""
-    zoon = Zoon(TRUE)
-    result = zoon.mutate_and_run(0, Path("mutant"), "--help", 1)  # TODO: create in a tempdir with a fixture
+    zoon = Zoon(which("true"))
+    result = zoon.mutate_and_run(0, Path(tmpdir), "--help", 1)
     assert result[1] != "success"

@@ -2,12 +2,15 @@
 """Test run module."""
 
 import datetime
+import os
 import sys
+from pathlib import Path
+
+import pytest  # type: ignore
 
 from run import run
 from utils import which
 
-BADPATH = "/u/jane/me/tarzan"
 # pylint:disable=arguments-differ
 
 
@@ -54,11 +57,12 @@ def test_run_success() -> None:
 
 # def test_run_fail() -> None:
 #     """Unsuccessful run produces calledprocesserror."""
-#     observed = run(f"ls {BADPATH}")
+#     badpath = "/u/jane/me/tarzan"
+#     observed = run(f"ls {badpath}")
 #
 #     assert observed[0] == 1 if platform == "darwin" else 2
 #     assert observed[1:3] == ("calledprocesserror", "")
-#     expected = ( "Command '['ls', '/u/jane/me/tarzan']'
+#     expected = ( f"Command '['ls', '{badpath}']'
 #         returned non-zero exit status 1.")
 #     if platform() == "darwin":
 #         assert observed[3] == expected
@@ -68,13 +72,14 @@ def test_run_success() -> None:
 #
 def test_run_badpath() -> None:
     """bad command produces filenotfounderror."""
+    badpath = "/u/jane/me/tarzan"
     expected = (
         2,
         "filenotfounderror",
         "",
-        f"[Errno 2] No such file or directory: '{BADPATH}'",
+        f"[Errno 2] No such file or directory: '{badpath}'",
     )
-    observed = run(BADPATH)
+    observed = run(badpath)
     assert observed[:2] == expected[:2]
     assert expected[3] in observed[3]
 
@@ -110,13 +115,25 @@ def test_run_file_not_found() -> None:
     assert expected[3] in observed[3]
 
 
-# def test_run_oserror() -> None:
-#     """Run something not a file produces OSError."""
-#     # TODO: create the executable and put in a temporary directory
-#     expected = (126, "oserror", "", "[Errno 8] Exec format error: 't/bin/badexe'")
-#     assert run("t/bin/badexe") == expected
-#
-#
+@pytest.fixture()
+def bad_exe(tmpdir):
+    """Create a bad executable."""
+    src_file = str(tmpdir / "bad_src.h")
+    exe_file = str(tmpdir / "bad_exe")
+    open(src_file, "w").close()
+    os.system(f"cc {src_file} -o {exe_file}")
+    Path(exe_file).chmod(0o755)
+    return exe_file
+
+
+def test_run_oserror(bad_exe) -> None:  # pylint:disable=redefined-outer-name
+    """Run something not a file produces OSError."""
+    # TODO: Make this portable
+    if platform() == "darwin":
+        expected = (126, "oserror", "", f"[Errno 8] Exec format error: '{bad_exe}'")
+        assert run(bad_exe)[:3] == expected[:3]
+
+
 def test_run_with_args() -> None:
     """Run something with args"""
 
