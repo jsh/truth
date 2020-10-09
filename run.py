@@ -13,6 +13,10 @@
 See https://tldp.org/LDP/abs/html/exitcodes.html
 See also /usr/include/sysexits.h
 """
+# TODO: fix collection of excepts
+#       - cover the relevant cases
+#       - portable (Linux & Darwin)
+#       - tested (t/test_run.py)
 
 import shlex
 import subprocess

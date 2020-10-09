@@ -141,3 +141,9 @@ def test_delete() -> None:
     assert zoon_0.delete(2, 3).byteseq != zoon_1.byteseq
     assert zoon_0.delete(0, 2).byteseq != zoon_1.byteseq
     assert zoon_0.delete(0, 3).byteseq != zoon_1.byteseq
+
+def test_mutate_and_run() -> None:
+    """mutate_and_run does that"""
+    zoon = Zoon(TRUE)
+    result = zoon.mutate_and_run(0, Path("mutant"), "--help", 1)  # TODO: create in a tempdir with a fixture
+    assert result[1] != "success"

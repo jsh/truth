@@ -18,6 +18,7 @@ def platform():
     """
     # TODO: this should be generic setup code with an @
     # TODO: this should, perhaps, be a table somewhere
+    # TODO: move into utils?
     this_platform = sys.platform
     assert this_platform in {
         "darwin",
@@ -129,10 +130,8 @@ def test_run_with_args() -> None:
     output_msg = "\n".join(output_lines)
     expected = (0, "success", output_msg, "")
     # check stdout
-    if platform() == "darwin":
-        observed = run(str("gtrue --version"))
-    else:
-        observed = run(str("true --version"))
+    true = "gtrue" if platform() == "darwin" else "true"
+    observed = run(f"{true} --version")
     assert expected[2] in observed[2]
     # check the rest
     for field in [0, 1, 3]:
