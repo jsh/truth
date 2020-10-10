@@ -48,7 +48,6 @@ def get_args(
 
     When this finishes we return a Namespace that has these attributes
       - verbose: how chatty to be (bool)
-      - threads: number of threads (int) [default: 1]
       - wild_type: path to executable being considered (e.g., "/usr/bin/true"). [Must exist.]
       - bit_size: size of wild_type, in bits (int)
       - byte_size: size of wild_type, in bytes (int)
@@ -67,9 +66,6 @@ def get_args(
     parser = argparse.ArgumentParser(description=description)
 
     parser.add_argument("--verbose", help="be extra chatty", action="store_true")
-    parser.add_argument(
-        "--threads", default=1, type=int, help="number of concurrent threads"
-    )
 
     parser.add_argument(
         "--wild_type",
