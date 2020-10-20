@@ -1,23 +1,13 @@
 [pylama]
-#linters = pydocstyle,pycodestyle,mccabe,pylint,pyflakes,isort,eradicate
 linters = pydocstyle,pycodestyle,mccabe,pylint,pyflakes,isort
-
-[pylama:eradicate]
-ignore = E800
-
-[pylama:pyflakes]
-builtins = _
 
 [pylama:pycodestyle]
 overgeneral_exceptions=Exception
-ignore = E111,E501
 
 [pylama:pylint]
-disable = R
 persistent = yes
 reports=yes
-overgeneral_exceptions = Exception
-ignore = E111,C0103,C0122,E501,WO511
+ignore = WO511  # TODOs
 
 [pylama:pydocstyle]
-ignore = D213
+ignore = D213  # mutually exclusive with D212

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Record change points.
+"""
+Record change points.
+
 Given an input file that is a list of paired values, (x, y),
 Report every line whose y value
 doesn't equal that of the preceeding line,

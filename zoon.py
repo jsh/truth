@@ -13,7 +13,7 @@ Result = Tuple[int, str, str, str]
 
 
 class Zoon:
-    """Create a Zoon from a file, a string, or another Zoon
+    """Create a Zoon from a file, a string, or another Zoon.
     :param str or Zoon: string of filename or {0,1} or another Zoon
     :param bool fromfile: is this coming from a file?
     """
@@ -104,7 +104,7 @@ class Zoon:
         return mutant
 
     def run(self, fs_path: Path, cmd_args: str = "", timeout: int = 1) -> Result:
-        """Run the Zoon with the given args for timeout seconds, max
+        """Run the Zoon with the given args for timeout seconds, max.
         :param pathlib.Path filepath: where to write and run the Zoon
         :param str cmd_args: what to pass the Zoon as args
         :param int timeout: timeout in seconds
@@ -119,7 +119,7 @@ class Zoon:
         return run.run(command, timeout=timeout)
 
     def delete(self, start: int, stop: int) -> Any:  # TODO: Optional[Zoon]?
-        """Delete slice from start to stop
+        """Delete slice from start to stop.
         :param int start: starting byte
         :param int stop: end byte (open interval)
         :returns: mutant
@@ -137,7 +137,7 @@ class Zoon:
         """Print something more attractive."""
 
     def insert(self, position, insertion):
-        """Return new Zoon with insertion (a Zoon)
+        """Return new Zoon with insertion (a Zoon).
         :param int position: position of insertion
         :param Zoon insertion: The chunk to insert
         :returns: new Zoon with insertion inserted
@@ -145,7 +145,7 @@ class Zoon:
         """
 
     def invert(self, chunk):
-        """Invert a chunk of the Zoon
+        """Invert a chunk of the Zoon.
         :param slice chunk:
         :returns: new Zoon with chunk inverted
         :rtype: Zoon
@@ -155,7 +155,7 @@ class Zoon:
         """
 
     def cross(self, other, position):
-        """Return a new Zoon that's self[:position] + other[position:]
+        """Return a new Zoon that's self[:position] + other[position:].
         :param Zoon other: The other Zoon to cross with
         :param int position: Where to cross-over
         :returns: the recombinant

@@ -16,6 +16,7 @@ from utils import which
 
 def platform():
     """Return platform name.
+
     :return: the platform name
     :rtype: str
     """
@@ -71,7 +72,7 @@ def test_run_success() -> None:
 #
 #
 def test_run_badpath() -> None:
-    """bad command produces filenotfounderror."""
+    """Bad command produces filenotfounderror."""
     badpath = "/u/jane/me/tarzan"
     expected = (
         2,
@@ -135,8 +136,7 @@ def test_run_oserror(bad_exe) -> None:  # pylint:disable=redefined-outer-name
 
 
 def test_run_with_args() -> None:
-    """Run something with args"""
-
+    """Run something with args."""
     output_lines = [
         "This is free software: you are free to change and redistribute it.",
         "There is NO WARRANTY, to the extent permitted by law.",

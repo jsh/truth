@@ -11,7 +11,7 @@ from utils import parsed_span, to_bytes, toggle_bit_in_byte, which
 
 
 def test_which() -> None:
-    """executing which() succeeds"""
+    """Executing which() succeeds."""
     truepath = which("true")
     assert os.system(truepath) == 0
 
@@ -60,7 +60,7 @@ def test_toggle_bit_in_int() -> None:
 
 
 def test_parsed_span() -> None:
-    """parsed_span handles all five span types"""
+    """parsed_span handles all five span types."""
     assert (0, sys.maxsize) == parsed_span("")
     assert (69, 70) == parsed_span("69")
     assert (6, 9) == parsed_span("6:9")

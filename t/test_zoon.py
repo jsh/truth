@@ -12,7 +12,7 @@ from zoon import Zoon
 
 
 def test_init_from_file() -> None:
-    """__init__() works correctly from string"""
+    """__init__() works correctly from string."""
     true = which("true")
     zoon = Zoon(true)
     assert "%r" % zoon == f"zoon.Zoon('{true}', fromfile=True)"
@@ -25,26 +25,26 @@ def test_init_from_string() -> None:
 
 
 def test_init_from_zoon() -> None:
-    """__init__() works correctly from Zoon"""
+    """__init__() works correctly from Zoon."""
     zoon = Zoon("00001100", fromfile=False)
     zoon2 = Zoon(zoon, fromfile=False)
     assert zoon2.byteseq == zoon.byteseq
 
 
 def test_bad_string() -> None:
-    """assert on attempt to create Zoon from non-binary string."""
+    """Assert on attempt to create Zoon from non-binary string."""
     with pytest.raises(AssertionError):
         Zoon("abcdefgh", fromfile=False)
 
 
 def test_bad_initializer() -> None:
-    """assert on attempt to create Zoon from non-binary string."""
+    """Assert on attempt to create Zoon from non-binary string."""
     with pytest.raises(TypeError):
         Zoon({}, fromfile=False)
 
 
 def test_bad_file() -> None:
-    """assert on attempt to create Zoon from non-file."""
+    """Assert on attempt to create Zoon from non-file."""
     with pytest.raises(AssertionError):
         Zoon("mumblefrabitz")
 
@@ -64,7 +64,7 @@ def test_string_len() -> None:
 
 
 def test_file_len() -> None:
-    """len() works correctly on Zoon from file"""
+    """len() works correctly on Zoon from file."""
     true = which("true")
     zoon = Zoon(true)
     assert len(zoon) == Path(true).stat().st_size * 8
@@ -116,7 +116,7 @@ def test_write_temp_file(tmp_path) -> None:
 
 
 def test_mutate() -> None:
-    """Mutate a bit in a Zoon"""
+    """Mutate a bit in a Zoon."""
     zoon_0 = Zoon("00000000", fromfile=False)
     new_zoon = zoon_0.mutate(0)
     assert new_zoon.byteseq != zoon_0.byteseq
@@ -126,7 +126,7 @@ def test_mutate() -> None:
 
 
 def test_run(tmp_path) -> None:
-    """Run a zoon"""
+    """Run a zoon."""
     expected = (0, "success", "", "")
     true = which("true")
     zoon = Zoon(true)
@@ -147,7 +147,7 @@ def test_delete() -> None:
 
 
 def test_mutate_and_run(tmpdir) -> None:
-    """mutate_and_run does that"""
+    """mutate_and_run does that."""
     zoon = Zoon(which("true"))
     result = zoon.mutate_and_run(0, Path(tmpdir), "--help", 1)
     assert result[1] != "success"
