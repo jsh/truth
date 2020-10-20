@@ -34,14 +34,8 @@ pylama:
 pylint:
 	pylint --disable=fixme -rn ${SOURCES} | sort -t: -k2 -n -r
 
-test: t/badexe
+test:
 	pytest
-
-t/badexe:
-	touch t/badexe.h
-	mkdir -p t/bin
-	cc t/badexe.h -o t/bin/badexe
-	chmod +x t/bin/badexe
 
 
 .PHONY: all black clean fixme lint mypy pylint pylama isort test t/badexe
