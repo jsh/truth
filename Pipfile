@@ -9,6 +9,8 @@ verify_ssl = true
 pytest = "*"
 isort = "*"
 eradicate = "*"
+pylama = "*"
+pylama-pylint = "*"
 
 [requires]
 python_version = "3.8"

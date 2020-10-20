@@ -1,6 +1,6 @@
 [pylama]
 #linters = pydocstyle,pycodestyle,mccabe,pylint,pyflakes,isort,eradicate
-linters = pydocstyle,pycodestyle,mccabe,pylint,pyflakes
+linters = pydocstyle,pycodestyle,mccabe,pylint,pyflakes,isort
 
 [pylama:eradicate]
 ignore = E800

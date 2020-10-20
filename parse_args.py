@@ -48,7 +48,8 @@ def get_args(
 
     When this finishes we return a Namespace that has these attributes
       - verbose: how chatty to be (bool)
-      - wild_type: path to executable being considered (e.g., "/usr/bin/true"). [Must exist.]
+      - wild_type: path to executable being considered
+        (e.g., "/usr/bin/true"). [Must exist.]
       - bit_size: size of wild_type, in bits (int)
       - byte_size: size of wild_type, in bytes (int)
       - bits: bit-range of interest (Span) [default: entire wild_type]
