@@ -22,8 +22,7 @@ class Zoon:
     initializer: Any  # TODO: constrain
 
     def __init__(self, initializer, fromfile: bool = True) -> None:
-        """Instantiate a Zoon.
-        """
+        """Instantiate a Zoon."""
         self._initializer = initializer
         self._fromfile = fromfile
         self.__byteseq = array.array("B")  # array of unsigned chars

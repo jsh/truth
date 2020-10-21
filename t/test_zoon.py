@@ -5,6 +5,7 @@
 
 from pathlib import Path
 
+# pylint:disable=import-error
 import pytest  # type: ignore
 
 from utils import to_bytes, which

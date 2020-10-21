@@ -78,7 +78,7 @@ def run(command: str, timeout: int = 1) -> Result:
             outcome = f"signal{abs(returncode)}"
         else:
             returncode = returncode % 128
-    except Exception as exc:
+    except Exception as exc:  # TODO: make more precise?
         returncode = 127  # really, unknown, but has to be something
         outcome = "unknownerror"
         out = ""

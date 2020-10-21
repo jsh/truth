@@ -7,7 +7,7 @@ overgeneral_exceptions=Exception
 [pylama:pylint]
 persistent = yes
 reports=yes
-ignore = WO511  # TODOs
+ignore = W0511  # TODOs
 
 [pylama:pydocstyle]
 ignore = D213  # mutually exclusive with D212

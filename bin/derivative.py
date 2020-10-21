@@ -20,19 +20,26 @@ would be reported as
 
 import sys
 
-last_value = ["", ""]
-last_index = -1
-index = -1
-with open(sys.argv[1]) as fin:
-    for line in fin:
-        index += 1
-        value = line.split()
-        if value[1] != last_value[1]:
-            span = index - last_index
-            if index > 0:
-                print(span, last_value)
-            last_value = value
-            last_index = index
-index += 1
-span = index - last_index
-print(span, last_value)
+
+def main():
+    """The big tent."""
+    last_value = ["", ""]
+    last_index = -1
+    index = -1
+    with open(sys.argv[1]) as fin:
+        for line in fin:
+            index += 1
+            value = line.split()
+            if value[1] != last_value[1]:
+                span = index - last_index
+                if index > 0:
+                    print(span, last_value)
+                last_value = value
+                last_index = index
+    index += 1
+    span = index - last_index
+    print(span, last_value)
+
+
+if __name__ == "__main__":
+    main()

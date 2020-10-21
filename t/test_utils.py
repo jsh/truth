@@ -5,6 +5,7 @@
 import os
 import sys
 
+# pylint:disable=import-error
 import pytest  # type: ignore
 
 from utils import parsed_span, to_bytes, toggle_bit_in_byte, which
@@ -18,28 +19,28 @@ def test_which() -> None:
 
 def test_to_bytes_low() -> None:
     """to_bytes() works with low bits set."""
-    s = "00000011"
-    assert to_bytes(s) == b"\x03"
+    bstr = "00000011"
+    assert to_bytes(bstr) == b"\x03"
 
 
 def test_to_bytes_high() -> None:
     """to_bytes() works with high bits set."""
-    s = "11000000"
-    assert to_bytes(s) == b"\xc0"
+    bstr = "11000000"
+    assert to_bytes(bstr) == b"\xc0"
 
 
 def test_to_bytes_missing() -> None:
     """to_bytes() zero-pads on the right when necessary."""
     # 0-pad on the right
-    s = "000011"
-    assert to_bytes(s) == b"\x0c"
+    bstr = "000011"
+    assert to_bytes(bstr) == b"\x0c"
 
 
 def test_to_bytes_badstring() -> None:
     """to_bytes() asserts on non-binary strings."""
-    s = "abcde"
+    bad_bstr = "abcde"
     with pytest.raises(AssertionError):
-        assert to_bytes(s)
+        assert to_bytes(bad_bstr)
 
 
 def test_toggle_bit_in_int() -> None:

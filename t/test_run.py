@@ -6,6 +6,7 @@ import os
 import sys
 from pathlib import Path
 
+# pylint:disable=import-error
 import pytest  # type: ignore
 
 from run import run

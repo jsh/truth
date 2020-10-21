@@ -6,7 +6,6 @@ SOURCES=$(filter-out ${PYTHON_PROBLEMS}, ${ALL_PYTHON})
 
 all: lint test
 
-# lint: black mypy pylint pylama
 lint: black mypy pylint pylama
 
 black: isort
@@ -32,10 +31,10 @@ pylama:
 	pylama -o .config/pylama ${SOURCES}
 
 pylint:
-	pylint --disable=fixme -rn ${SOURCES} | sort -t: -k2 -n -r
+	pylint --disable=fixme,broad-except -rn ${SOURCES} | sort -t: -k2 -n -r
 
 test:
 	pytest
 
 
-.PHONY: all black clean fixme lint mypy pylint pylama isort test t/badexe
+.PHONY: all black clean fixme lint mypy pylint pylama isort test
