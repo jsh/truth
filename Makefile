@@ -15,7 +15,7 @@ clean:
 	git clean -dfx --exclude=bin --exclude=problems --exclude=results
 
 coverage:
-	- pytest --cov --cov-report=html
+	- pytest --cov --cov-report=html -v . t
 	open htmlcov/index.html
 
 fixme:
@@ -34,7 +34,7 @@ pylint:
 	pylint --disable=fixme,broad-except -rn ${SOURCES} | sort -t: -k2 -n -r
 
 test:
-	pytest
+	pytest -v . t
 
 
 .PHONY: all black clean fixme lint mypy pylint pylama isort test

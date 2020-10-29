@@ -4,12 +4,13 @@
 import array
 import tempfile
 from pathlib import Path
-from typing import Any, List, Tuple
+from typing import Any, List, Tuple, Union
 
 import run
 from utils import to_bytes, toggle_bit_in_byte
 
 Result = Tuple[int, str, str, str]
+ZoonInit = Union[str, "Zoon"]
 
 
 class Zoon:
@@ -18,10 +19,7 @@ class Zoon:
     :param bool fromfile: is this coming from a file?
     """
 
-    __byteseq: array.array
-    initializer: Any  # TODO: constrain
-
-    def __init__(self, initializer, fromfile: bool = True) -> None:
+    def __init__(self, initializer: ZoonInit, fromfile: bool = True) -> None:
         """Instantiate a Zoon."""
         self._initializer = initializer
         self._fromfile = fromfile
@@ -37,7 +35,7 @@ class Zoon:
         elif isinstance(initializer, Zoon):
             self.__byteseq.extend(initializer.byteseq)
         else:
-            raise TypeError
+            raise TypeError("incorrect type of initializer")
 
     @property
     def byteseq(self) -> array.array:
