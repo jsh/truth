@@ -16,15 +16,13 @@ ZoonInit = Union[str, Path, "Zoon"]
 class Zoon:
     """Create a Zoon from a file, a string, or another Zoon.
     :param Path, str, or Zoon: filepath or {0,1} or another Zoon
-    :param bool fromfile: is this coming from a file?
     """
 
-    def __init__(self, initializer: ZoonInit, fromfile: bool = True) -> None:
+    def __init__(self, initializer: ZoonInit) -> None:
         """Instantiate a Zoon."""
         self._initializer = initializer
-        self._fromfile = fromfile
         self.__byteseq = array.array("B")  # array of unsigned chars
-        if fromfile and isinstance(initializer, Path):
+        if isinstance(initializer, Path):
             path = Path(initializer)
             assert path.is_file()
             with open(initializer, "rb") as fin:
@@ -61,7 +59,7 @@ class Zoon:
 
     def __repr__(self) -> str:
         """return something that looks just like the object."""
-        return f"zoon.Zoon('{self._initializer}', fromfile={self._fromfile})"
+        return f"zoon.Zoon('{self._initializer}')"
 
     def write(self, fs_path: Path) -> Path:
         """Write Zoon to file.
@@ -97,7 +95,7 @@ class Zoon:
         # TODO: exception if position > len(Zoon)
 
         byte, bit = divmod(position, 8)
-        mutant = Zoon(self, fromfile=False)
+        mutant = Zoon(self)
         mutant.byteseq[byte] = toggle_bit_in_byte(7 - bit, mutant.byteseq[byte])
         return mutant
 
@@ -124,7 +122,7 @@ class Zoon:
         :rtype: zoon.Zoon
         """
         # TODO: range checks
-        mutant = Zoon(self, fromfile=False)
+        mutant = Zoon(self)
         byteseq = mutant.byteseq
         mutant.byteseq = byteseq[:start] + byteseq[stop:]
         return mutant
