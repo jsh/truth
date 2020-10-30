@@ -11,7 +11,8 @@ isort = "*"
 eradicate = "*"
 pylama = "*"
 pylama-pylint = "*"
-pytest-cov = "*"
+bandit = "*"
+mypy = "*"
 
 [requires]
 python_version = "3.8"

@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 """Test zoon module."""
-# TODO: test a command with an arg.
-# TODO: fix mypy/pytest in a better way
 
 from pathlib import Path
 
-# pylint:disable=import-error
-import pytest  # type: ignore
+import pytest
 
 from utils import to_bytes, which
 from zoon import Zoon
@@ -16,32 +13,26 @@ def test_init_from_file() -> None:
     """__init__() works correctly from string."""
     true = which("true")
     zoon = Zoon(true)
-    assert "%r" % zoon == f"zoon.Zoon('{true}', fromfile=True)"
+    assert "%r" % zoon == f"zoon.Zoon('{true}')"
 
 
 def test_init_from_string() -> None:
     """__init__() works correctly from string."""
-    zoon = Zoon("000011", fromfile=False)
-    assert "%r" % zoon == "zoon.Zoon('000011', fromfile=False)"
+    zoon = Zoon("000011")
+    assert "%r" % zoon == "zoon.Zoon('000011')"
 
 
 def test_init_from_zoon() -> None:
     """__init__() works correctly from Zoon."""
-    zoon = Zoon("00001100", fromfile=False)
-    zoon2 = Zoon(zoon, fromfile=False)
+    zoon = Zoon("00001100")
+    zoon2 = Zoon(zoon)
     assert zoon2.byteseq == zoon.byteseq
 
 
 def test_bad_string() -> None:
     """Assert on attempt to create Zoon from non-binary string."""
     with pytest.raises(AssertionError):
-        Zoon("abcdefgh", fromfile=False)
-
-
-def test_bad_initializer() -> None:
-    """Assert on attempt to create Zoon from non-binary string."""
-    with pytest.raises(TypeError):
-        Zoon({}, fromfile=False)
+        Zoon("abcdefgh")
 
 
 def test_bad_file() -> None:
@@ -52,15 +43,15 @@ def test_bad_file() -> None:
 
 def test_string_len() -> None:
     """len() works correctly on Zoon from string."""
-    zoon = Zoon("00000011", fromfile=False)  # low bits set
+    zoon = Zoon("00000011")  # low bits set
     assert len(zoon) == 8
-    zoon = Zoon("11000000", fromfile=False)  # high bits set
+    zoon = Zoon("11000000")  # high bits set
     assert len(zoon) == 8
-    zoon = Zoon("11000000" * 100, fromfile=False)  # longer strings
+    zoon = Zoon("11000000" * 100)  # longer strings
     assert len(zoon) == 800
-    zoon = Zoon("110000", fromfile=False)  # blank-pad
+    zoon = Zoon("110000")  # blank-pad
     assert len(zoon) == 8
-    zoon = Zoon("0", fromfile=False)  # blank-pad really a lot
+    zoon = Zoon("0")  # blank-pad really a lot
     assert len(zoon) == 8
 
 
@@ -74,7 +65,7 @@ def test_file_len() -> None:
 def test_write_low(tmp_path) -> None:
     """Low bits set."""
     bit_string = "00000011"
-    zoon = Zoon(bit_string, fromfile=False)
+    zoon = Zoon(bit_string)
     bit_path = tmp_path / "bits"
     zoon.write(bit_path)
     assert bit_path.read_bytes() == to_bytes(bit_string)
@@ -83,7 +74,7 @@ def test_write_low(tmp_path) -> None:
 def test_write_high(tmp_path) -> None:
     """High bits set."""
     bit_string = "11000000"
-    zoon = Zoon(bit_string, fromfile=False)
+    zoon = Zoon(bit_string)
     bit_path = tmp_path / "bits"
     zoon.write(bit_path)
     assert bit_path.read_bytes() == to_bytes(bit_string)
@@ -92,7 +83,7 @@ def test_write_high(tmp_path) -> None:
 def test_write_missing(tmp_path) -> None:
     """0-pad on the right."""
     bit_string = "000011"
-    zoon = Zoon(bit_string, fromfile=False)
+    zoon = Zoon(bit_string)
     bit_path = tmp_path / "bits"
     zoon.write(bit_path)
     assert bit_path.read_bytes() == to_bytes(bit_string)
@@ -118,10 +109,10 @@ def test_write_temp_file(tmp_path) -> None:
 
 def test_mutate() -> None:
     """Mutate a bit in a Zoon."""
-    zoon_0 = Zoon("00000000", fromfile=False)
+    zoon_0 = Zoon("00000000")
     new_zoon = zoon_0.mutate(0)
     assert new_zoon.byteseq != zoon_0.byteseq
-    zoon_1 = Zoon("00000001", fromfile=False)
+    zoon_1 = Zoon("00000001")
     new_zoon = zoon_1.mutate(7)
     assert new_zoon.byteseq == zoon_0.byteseq
 
@@ -138,8 +129,8 @@ def test_delete() -> None:
     """Deletes delete correctly."""
     one = "00000001"
     ten = "00001010"
-    zoon_0 = Zoon(one + ten + one, fromfile=False)
-    zoon_1 = Zoon(one * 2, fromfile=False)
+    zoon_0 = Zoon(one + ten + one)
+    zoon_1 = Zoon(one * 2)
     assert zoon_0.delete(1, 2).byteseq == zoon_1.byteseq
     assert zoon_0.delete(0, 1).byteseq != zoon_1.byteseq
     assert zoon_0.delete(2, 3).byteseq != zoon_1.byteseq
