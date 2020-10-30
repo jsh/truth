@@ -12,6 +12,7 @@ eradicate = "*"
 pylama = "*"
 pylama-pylint = "*"
 bandit = "*"
+mypy = "*"
 
 [requires]
 python_version = "3.8"

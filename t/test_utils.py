@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 """Test utils module."""
-# TODO: fix mypy/pytest in a better way
 
 import os
 import sys
 
-# pylint:disable=import-error
-import pytest  # type: ignore
+import pytest
 
 from utils import parsed_span, to_bytes, toggle_bit_in_byte, which
 

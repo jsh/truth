@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 """Test zoon module."""
-# TODO: test a command with an arg.
-# TODO: fix mypy/pytest in a better way
 
 from pathlib import Path
 
-# pylint:disable=import-error
-import pytest  # type: ignore
+import pytest
 
 from utils import to_bytes, which
 from zoon import Zoon

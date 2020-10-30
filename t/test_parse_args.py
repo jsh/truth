@@ -3,10 +3,8 @@
 
 Modeled on https://bit.ly/35u38gV
 """
-# TODO: fix mypy/pytest in a better way
 
-# pylint:disable=import-error
-import pytest  # type: ignore
+import pytest
 
 from parse_args import get_args
 from utils import which

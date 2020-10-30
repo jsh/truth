@@ -6,13 +6,10 @@ import os
 import sys
 from pathlib import Path
 
-# pylint:disable=import-error
-import pytest  # type: ignore
+import pytest
 
 from run import run
 from utils import which
-
-# pylint:disable=arguments-differ
 
 
 def platform():

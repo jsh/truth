@@ -3,12 +3,13 @@
 SOURCES := $(wildcard *.py)
 TESTS := $(wildcard t/*.py)
 
-all: lint test
+all: lint test requirements.txt
 
-lint: bandit black mypy pylint pylama
+# lint: bandit black mypy pylint pylama
+lint: black mypy pylint pylama
 
 bandit:
-	bandit -q .
+	bandit -q -s B101 ${SOURCES}
 
 black: isort
 	black -q ${SOURCES} ${TESTS}
