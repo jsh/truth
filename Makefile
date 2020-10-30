@@ -35,6 +35,9 @@ pylama:
 pylint:
 	pylint --disable=fixme,broad-except -rn ${SOURCES} ${TESTS} | sort -t: -k2 -n -r
 
+requirements.txt: ${SOURCES} ${TESTS}
+	pip freeze > requirements.txt
+
 test:
 	pytest
 
