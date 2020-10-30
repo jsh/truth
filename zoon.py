@@ -4,29 +4,27 @@
 import array
 import tempfile
 from pathlib import Path
-from typing import Any, List, Tuple
+from typing import List, Optional, Tuple, Union
 
 import run
 from utils import to_bytes, toggle_bit_in_byte
 
-Result = Tuple[int, str, str, str]
+Result = Tuple[int, str, str, str]  # TODO: rename
+ZoonInit = Union[str, Path, "Zoon"]
 
 
 class Zoon:
     """Create a Zoon from a file, a string, or another Zoon.
-    :param str or Zoon: string of filename or {0,1} or another Zoon
+    :param Path, str, or Zoon: filepath or {0,1} or another Zoon
     :param bool fromfile: is this coming from a file?
     """
 
-    __byteseq: array.array
-    initializer: Any  # TODO: constrain
-
-    def __init__(self, initializer, fromfile: bool = True) -> None:
+    def __init__(self, initializer: ZoonInit, fromfile: bool = True) -> None:
         """Instantiate a Zoon."""
         self._initializer = initializer
         self._fromfile = fromfile
         self.__byteseq = array.array("B")  # array of unsigned chars
-        if fromfile:
+        if fromfile and isinstance(initializer, Path):
             path = Path(initializer)
             assert path.is_file()
             with open(initializer, "rb") as fin:
@@ -37,7 +35,7 @@ class Zoon:
         elif isinstance(initializer, Zoon):
             self.__byteseq.extend(initializer.byteseq)
         else:
-            raise TypeError
+            raise TypeError("incorrect type of initializer")
 
     @property
     def byteseq(self) -> array.array:
@@ -83,20 +81,21 @@ class Zoon:
 
     def mutate_and_run(
         self, position: int, fs_path: Path, cmd_args: str = "", timeout: int = 1
-    ) -> Any:  # TODO: Zoon?
+    ) -> Result:
         """Mutate, then run.  Just what it sounds like."""
         mutant = self.mutate(position)
         return mutant.run(fs_path, cmd_args, timeout)
 
-    def mutate(self, position: int) -> Any:  # TODO: Zoon?
+    def mutate(self, position: int) -> "Zoon":
         """Point-mutate Zoon bytes at the given position.
         :param int position: the position of the point mutation
         :return: mutant
         :rtype: zoon.Zoon
         assert position >= 0
         return new array with bitflip at position
-        TODO: exception if position > len(Zoon)
         """
+        # TODO: exception if position > len(Zoon)
+
         byte, bit = divmod(position, 8)
         mutant = Zoon(self, fromfile=False)
         mutant.byteseq[byte] = toggle_bit_in_byte(7 - bit, mutant.byteseq[byte])
@@ -117,14 +116,14 @@ class Zoon:
         command = "%s %s" % (file_path, cmd_args)
         return run.run(command, timeout=timeout)
 
-    def delete(self, start: int, stop: int) -> Any:  # TODO: Optional[Zoon]?
+    def delete(self, start: int, stop: int) -> Optional["Zoon"]:
         """Delete slice from start to stop.
         :param int start: starting byte
         :param int stop: end byte (open interval)
         :returns: mutant
         :rtype: zoon.Zoon
-        TODO: range checks
         """
+        # TODO: range checks
         mutant = Zoon(self, fromfile=False)
         byteseq = mutant.byteseq
         mutant.byteseq = byteseq[:start] + byteseq[stop:]
