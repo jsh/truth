@@ -5,8 +5,10 @@ TESTS := $(wildcard t/*.py)
 
 all: lint test
 
-# lint: black mypy pylint pylama
-lint: black pylint pylama
+lint: bandit black mypy pylint pylama
+
+bandit:
+	bandit -q .
 
 black: isort
 	black -q ${SOURCES} ${TESTS}
@@ -37,4 +39,4 @@ test:
 	pytest
 
 
-.PHONY: all black clean fixme lint mypy pylint pylama isort test
+.PHONY: all bandit black clean fixme lint mypy pylint pylama isort test

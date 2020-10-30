@@ -38,12 +38,6 @@ def test_bad_string() -> None:
         Zoon("abcdefgh")
 
 
-def test_bad_initializer() -> None:
-    """Assert on attempt to create Zoon from non-binary string."""
-    with pytest.raises(TypeError):
-        Zoon({})
-
-
 def test_bad_file() -> None:
     """Assert on attempt to create Zoon from non-file."""
     with pytest.raises(AssertionError):

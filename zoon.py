@@ -4,7 +4,7 @@
 import array
 import tempfile
 from pathlib import Path
-from typing import List, Optional, Tuple, Union
+from typing import List, Tuple, Union
 
 import run
 from utils import to_bytes, toggle_bit_in_byte
@@ -114,7 +114,7 @@ class Zoon:
         command = "%s %s" % (file_path, cmd_args)
         return run.run(command, timeout=timeout)
 
-    def delete(self, start: int, stop: int) -> Optional["Zoon"]:
+    def delete(self, start: int, stop: int) -> "Zoon":
         """Delete slice from start to stop.
         :param int start: starting byte
         :param int stop: end byte (open interval)
