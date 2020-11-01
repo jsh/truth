@@ -9,7 +9,7 @@ from typing import List, Tuple, Union
 import run
 from utils import to_bytes, toggle_bit_in_byte
 
-RunResult = Tuple[int, str, str, str]  # TODO: rename
+RunResult = Tuple[int, str, str, str]
 ZoonInit = Union[str, Path, "Zoon"]
 
 
