@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 from typing import List, Optional, Tuple
 
-from utils import parsed_span, which
+from utils import parsed_span, pwhich
 
 Span = collections.namedtuple("Span", "start end")
 
@@ -70,7 +70,7 @@ def get_args(
 
     parser.add_argument(
         "--wild_type",
-        default=which("true"),
+        default=pwhich("true"),
         help="un-mutated executable (default: %(default)s)",
     )
 

@@ -7,13 +7,13 @@ Modeled on https://bit.ly/35u38gV
 import pytest
 
 from parse_args import get_args
-from utils import which
+from utils import pwhich
 
 
 def test_get_args_defaults() -> None:
     """get_args defaults."""
     parser = get_args("Testing default wild_type")
-    assert parser.wild_type == which("true")
+    assert parser.wild_type == pwhich("true")
 
 
 def test_bits() -> None:
@@ -42,7 +42,7 @@ def test_bytes_to_end() -> None:
 
 def test_wild_type() -> None:
     """get_args understands --wild_type."""
-    falsepath = which("false")
+    falsepath = pwhich("false")
     parser = get_args("Testing wild_type", [f"--wild_type={falsepath}"])
     assert parser.wild_type == f"{falsepath}"
 

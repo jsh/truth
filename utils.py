@@ -2,9 +2,8 @@
 """Miscellaneous utility routines."""
 
 import collections
-import pathlib
 import re
-import subprocess
+import shutil
 import sys
 from pathlib import Path
 
@@ -42,16 +41,16 @@ def toggle_bit_in_byte(offset: int, byte: int) -> int:
     return byte ^ mask
 
 
-def which(command: str) -> pathlib.Path:
-    """An important default.
+def pwhich(command: str) -> Path:
+    """Path to given command.
+
+    shutil.which only returns a string.
     :returns: Path to command
     :rtype: pathlib.Path
     """
-    return Path(
-        subprocess.check_output(
-            f"which {command}", shell=True, universal_newlines=True
-        ).strip()
-    )
+    path_str = shutil.which(command)
+    assert path_str, f"{command} not found"
+    return Path(path_str)
 
 
 def parsed_span(span: str) -> Span:

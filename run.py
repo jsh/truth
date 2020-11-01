@@ -19,14 +19,14 @@ See also /usr/include/sysexits.h
 #       - tested (t/test_run.py)
 
 import shlex
-import subprocess
-from subprocess import PIPE
+import subprocess  # nosec
+from subprocess import PIPE  # nosec
 from typing import Tuple
 
-Result = Tuple[int, str, str, str]
+RunResult = Tuple[int, str, str, str]
 
 
-def run(command: str, timeout: int = 1) -> Result:
+def run(command: str, timeout: int = 1) -> RunResult:
     """Run the command and record the result.
     :param str command:
     :param int timeout: # timeout
@@ -37,7 +37,7 @@ def run(command: str, timeout: int = 1) -> Result:
     cmd = shlex.split(command)
 
     try:
-        output = subprocess.run(
+        output = subprocess.run(  # nosec
             cmd,
             timeout=timeout,
             stdout=PIPE,

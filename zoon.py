@@ -9,7 +9,7 @@ from typing import List, Tuple, Union
 import run
 from utils import to_bytes, toggle_bit_in_byte
 
-Result = Tuple[int, str, str, str]  # TODO: rename
+RunResult = Tuple[int, str, str, str]  # TODO: rename
 ZoonInit = Union[str, Path, "Zoon"]
 
 
@@ -33,7 +33,7 @@ class Zoon:
         elif isinstance(initializer, Zoon):
             self.__byteseq.extend(initializer.byteseq)
         else:
-            raise TypeError("incorrect type of initializer")
+            raise TypeError(f"bad initializer type: {type(initializer)}")
 
     @property
     def byteseq(self) -> array.array:
@@ -79,7 +79,7 @@ class Zoon:
 
     def mutate_and_run(
         self, position: int, fs_path: Path, cmd_args: str = "", timeout: int = 1
-    ) -> Result:
+    ) -> RunResult:
         """Mutate, then run.  Just what it sounds like."""
         mutant = self.mutate(position)
         return mutant.run(fs_path, cmd_args, timeout)
@@ -99,7 +99,7 @@ class Zoon:
         mutant.byteseq[byte] = toggle_bit_in_byte(7 - bit, mutant.byteseq[byte])
         return mutant
 
-    def run(self, fs_path: Path, cmd_args: str = "", timeout: int = 1) -> Result:
+    def run(self, fs_path: Path, cmd_args: str = "", timeout: int = 1) -> RunResult:
         """Run the Zoon with the given args for timeout seconds, max.
         :param pathlib.Path filepath: where to write and run the Zoon
         :param str cmd_args: what to pass the Zoon as args

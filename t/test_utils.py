@@ -6,12 +6,12 @@ import sys
 
 import pytest
 
-from utils import parsed_span, to_bytes, toggle_bit_in_byte, which
+from utils import parsed_span, pwhich, to_bytes, toggle_bit_in_byte
 
 
-def test_which() -> None:
-    """Executing which() succeeds."""
-    truepath = which("true")
+def test_pwhich() -> None:
+    """Executing pwhich() succeeds."""
+    truepath = pwhich("true")
     assert os.system(truepath) == 0
 
 

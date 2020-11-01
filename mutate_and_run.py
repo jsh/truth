@@ -11,7 +11,7 @@ from typing import Tuple
 from parse_args import get_args
 from zoon import Zoon
 
-Result = Tuple[int, str, str, str]
+RunResult = Tuple[int, str, str, str]
 
 
 def survey_range(args) -> None:
@@ -33,7 +33,7 @@ def survey_range(args) -> None:
         report(result, bit, verbose=args.verbose)
 
 
-def report(result: Result, bit, verbose=False) -> None:
+def report(result: RunResult, bit, verbose=False) -> None:
     """Report the results.
     :param list results: results to report
     :param int bit: mutated bit

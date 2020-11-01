@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from run import run
-from utils import which
+from utils import pwhich
 
 
 def platform():
@@ -32,19 +32,19 @@ def platform():
 def test_run_test_true() -> None:
     """Simple success."""
     expected = (0, "success", "", "")
-    assert run(str(which("true"))) == expected
+    assert run(str(pwhich("true"))) == expected
 
 
 def test_run_test_false() -> None:
     """Simple failure."""
-    false = str(which("false"))
+    false = str(pwhich("false"))
     expected = (
         1,
         "calledprocesserror",
         "",
         f"Command '['{false}']' returned non-zero exit status 1.",
     )
-    assert run(str(which("false"))) == expected
+    assert run(str(pwhich("false"))) == expected
 
 
 def test_run_success() -> None:

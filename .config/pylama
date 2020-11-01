@@ -1,5 +1,5 @@
 [pylama]
-linters = pydocstyle,pycodestyle,mccabe,pylint,pyflakes,isort
+linters = pydocstyle,pycodestyle,pylint,pyflakes,mypy,mccabe
 
 [pylama:pycodestyle]
 overgeneral_exceptions=Exception

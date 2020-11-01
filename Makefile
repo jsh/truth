@@ -5,8 +5,7 @@ TESTS := $(wildcard t/*.py)
 
 all: lint test requirements.txt
 
-# lint: bandit black mypy pylint pylama
-lint: black mypy pylint pylama
+lint: black pylama bandit
 
 bandit:
 	bandit -q -s B101 ${SOURCES}
@@ -18,7 +17,7 @@ clean:
 	git clean -dfx --exclude=bin --exclude=problems --exclude=results
 
 coverage:
-	- pytest -q --cov --cov-report=html
+	- pytest -q --cov="." --cov-report=html
 	open htmlcov/index.html
 
 fixme:
