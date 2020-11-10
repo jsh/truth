@@ -1,6 +1,7 @@
 astroid==2.4.2
-attrs==20.2.0
+attrs==20.3.0
 bandit==1.6.2
+coverage==5.3
 eradicate==2.0.0
 gitdb==4.0.5
 GitPython==3.1.11
@@ -22,6 +23,7 @@ pylama-pylint==3.1.1
 pylint==2.6.0
 pyparsing==2.4.7
 pytest==6.1.2
+pytest-cov==2.10.1
 PyYAML==5.3.1
 six==1.15.0
 smmap==3.0.4

@@ -13,6 +13,10 @@ pylama = "*"
 pylama-pylint = "*"
 bandit = "*"
 mypy = "*"
+pytest-cov = "*"
+pycodestyle = "*"
+pydocstyle = "*"
+pyflakes = "*"
 
 [requires]
 python_version = "3.8"

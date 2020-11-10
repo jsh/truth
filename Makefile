@@ -1,11 +1,12 @@
 # The usual
 
+NO_CLEAN := bin problems results
+PYTEST_OPTIONS := -q --doctest-modules
+PIPENV_PACKAGES := bandit isort mypy pycodestyle pydocstyle pyflakes pylama pylama_pylint pytest pytest-cov
 SOURCES := $(wildcard *.py)
 TESTS := $(wildcard t/*.py)
 
 all: lint test requirements.txt
-
-lint: black pylama bandit
 
 bandit:
 	bandit -q -s B101 ${SOURCES}
@@ -14,10 +15,10 @@ black: isort
 	black -q ${SOURCES} ${TESTS}
 
 clean:
-	git clean -dfx --exclude=bin --exclude=problems --exclude=results
+	git clean -dfx ${NO_CLEAN:%=--exclude %}
 
 coverage:
-	- pytest -q --cov="." --cov-report=html
+	- pytest ${PYTEST_OPTIONS} --cov="." --cov-report=html
 	open htmlcov/index.html
 
 fixme:
@@ -26,8 +27,15 @@ fixme:
 isort:
 	isort ${SOURCES} ${TESTS}
 
+lint: black pylama bandit
+
 mypy:
 	mypy ${PWD}
+
+pipenv_setup:   # run this once, during initialization
+	pipenv install --dev
+	pipenv install ${PIPENV_PACKAGES}
+	pipenv shell
 
 pylama:
 	pylama -o .config/pylama ${SOURCES} ${TESTS}
@@ -39,7 +47,6 @@ requirements.txt: ${SOURCES} ${TESTS}
 	pip freeze > requirements.txt
 
 test:
-	pytest -q
+	pytest ${PYTEST_OPTIONS}
 
-
-.PHONY: all bandit black clean fixme lint mypy pylint pylama isort test
+.PHONY: all bandit black coverage clean fixme isort lint mypy pipenv_setup pylama pylint test
