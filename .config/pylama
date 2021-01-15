@@ -2,12 +2,13 @@
 linters = pydocstyle,pycodestyle,pylint,pyflakes,mypy,mccabe
 
 [pylama:pycodestyle]
+ignore=E501
 overgeneral_exceptions=Exception
 
 [pylama:pylint]
 persistent = yes
 reports=yes
-ignore = W0511  # TODOs
+ignore = W0511,unsubscriptable-object
 
 [pylama:pydocstyle]
 ignore = D213  # mutually exclusive with D212
