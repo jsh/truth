@@ -6,17 +6,17 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-pytest = "*"
-isort = "*"
-eradicate = "*"
-pylama = "*"
-pylama-pylint = "*"
 bandit = "*"
+black = "*"
+isort = "*"
 mypy = "*"
-pytest-cov = "*"
 pycodestyle = "*"
 pydocstyle = "*"
 pyflakes = "*"
+pylama = "*"
+pylama-pylint = "*"
+pytest = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.8"
