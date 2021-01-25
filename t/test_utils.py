@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Test utils module."""
 
-import os
+import subprocess  # nosec
 import sys
 
 import pytest
@@ -12,7 +12,7 @@ from utils import parsed_span, pwhich, to_bytes, toggle_bit_in_byte
 def test_pwhich() -> None:
     """Executing pwhich() succeeds."""
     truepath = pwhich("true")
-    assert os.system(truepath) == 0
+    assert subprocess.run(str(truepath)).returncode == 0  # nosec
 
 
 def test_to_bytes_low() -> None:

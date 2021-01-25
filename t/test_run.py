@@ -2,7 +2,8 @@
 """Test run module."""
 
 import datetime
-import os
+import shlex
+import subprocess  # nosec
 import sys
 from pathlib import Path
 
@@ -120,7 +121,7 @@ def bad_exe(tmpdir):
     src_file = str(tmpdir / "bad_src.h")
     exe_file = str(tmpdir / "bad_exe")
     open(src_file, "w").close()
-    os.system(f"cc {src_file} -o {exe_file}")
+    subprocess.run(shlex.split(f"/usr/bin/cc {src_file} -o {exe_file}"))  # nosec
     Path(exe_file).chmod(0o755)
     return exe_file
 

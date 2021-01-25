@@ -2,7 +2,6 @@
 """An executable, treated like a living entity."""
 
 import array
-import tempfile
 from pathlib import Path
 from typing import List, Tuple, Union
 
@@ -61,28 +60,24 @@ class Zoon:
         """return something that looks just like the object."""
         return f"zoon.Zoon('{self._initializer}')"
 
-    def write(self, fs_path: Path) -> Path:
+    def write(self, file_path: Path) -> Path:
         """Write Zoon to file.
-        Given a directory, create a random filename
-        Given a filename, create that file
-        Dirname of disk representation must exist.
+        Create a file by the current filename
         :param str path: The path to write to.
         :return: path to written filename
         """
-        if fs_path.is_dir():
-            file_path = Path(tempfile.NamedTemporaryFile(dir=fs_path).name)
-        else:
-            file_path = fs_path
         with open(file_path, "wb") as fout:
             self.__byteseq.tofile(fout)
         return file_path
 
     def mutate_and_run(
-        self, position: int, fs_path: Path, cmd_args: str = "", timeout: int = 1
+        self, position: int, dir_path: Path, cmd_args: str = "", timeout: int = 1
     ) -> RunResult:
         """Mutate, then run.  Just what it sounds like."""
+        print(f"position: {position}")
         mutant = self.mutate(position)
-        return mutant.run(fs_path, cmd_args, timeout)
+        file_path = dir_path / str(position)
+        return mutant.run(file_path, cmd_args, timeout)
 
     def mutate(self, position: int) -> "Zoon":
         """Point-mutate Zoon bytes at the given position.
@@ -99,7 +94,7 @@ class Zoon:
         mutant.byteseq[byte] = toggle_bit_in_byte(7 - bit, mutant.byteseq[byte])
         return mutant
 
-    def run(self, fs_path: Path, cmd_args: str = "", timeout: int = 1) -> RunResult:
+    def run(self, file_path: Path, cmd_args: str = "", timeout: int = 1) -> RunResult:
         """Run the Zoon with the given args for timeout seconds, max.
         :param pathlib.Path filepath: where to write and run the Zoon
         :param str cmd_args: what to pass the Zoon as args
@@ -109,7 +104,7 @@ class Zoon:
         :rtype: tuple(int, str, str, str)
         """
         assert timeout > 0
-        file_path = self.write(fs_path)
+        file_path = self.write(file_path)
         file_path.chmod(0o755)
         command = "%s %s" % (file_path, cmd_args)
         return run.run(command, timeout=timeout)

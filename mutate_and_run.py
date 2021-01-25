@@ -2,6 +2,7 @@
 """Drive the truth."""
 
 import atexit
+import logging
 import shutil
 import sys
 import tempfile
@@ -20,30 +21,26 @@ def survey_range(args) -> None:
     """
     zoon = Zoon(args.wild_type)
     cmd_args = args.cmd_args
-    if args.mutant:  # name the file
-        fs_path = Path(args.mutant)
-    elif args.mutants:  # name the directory
-        fs_path = Path(args.mutants)
+    if args.mutants:  # name the directory
+        dir_path = Path(args.mutants)
+        dir_path.mkdir(parents=True, exist_ok=True)
     else:  # neither specified
         tempdir = tempfile.mkdtemp()  # use a temporary directory, then cleanup
         atexit.register(shutil.rmtree, tempdir)
-        fs_path = Path(tempdir)
+        dir_path = Path(tempdir)
     for bit in range(args.bits.start, args.bits.end):
-        result = zoon.mutate_and_run(position=bit, fs_path=fs_path, cmd_args=cmd_args)
-        report(result, bit, verbose=args.verbose)
+        result = zoon.mutate_and_run(position=bit, dir_path=dir_path, cmd_args=cmd_args)
+        report(result, bit)
 
 
-def report(result: RunResult, bit, verbose=False) -> None:
+def report(result: RunResult, bit) -> None:
     """Report the results.
     :param list results: results to report
     :param int bit: mutated bit
-    :param bool verbose: chatty or terse?
     """
-    if verbose:
-        print(f"mutant at bit {bit}: {result}")
-    else:
-        if result:
-            print(f"{bit}\t{result[0]}")
+    logging.info("mutant at bit %d: %s", bit, result)
+    if result:
+        print(f"{bit}\t{result[0]}")
 
 
 def main(argv: list) -> None:
@@ -54,8 +51,6 @@ def main(argv: list) -> None:
     args = get_args(
         "Brute-force survey of point mutants, every site in a span.", argv[1:]
     )
-    if args.verbose:
-        print(args, file=sys.stderr)
     survey_range(args)
 
 

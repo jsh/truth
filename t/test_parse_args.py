@@ -4,6 +4,8 @@
 Modeled on https://bit.ly/35u38gV
 """
 
+import logging
+
 import pytest
 
 from parse_args import get_args
@@ -50,7 +52,9 @@ def test_wild_type() -> None:
 def test_verbose() -> None:
     """get_args understands --verbose."""
     parser = get_args("Testing verbose", ["--verbose"])
-    assert parser.verbose
+    assert parser.loglevel == logging.INFO
+    parser = get_args("Testing info", ["--info"])
+    assert parser.loglevel == logging.INFO
 
 
 def test_argument_bits_and_bytes() -> None:
@@ -59,31 +63,10 @@ def test_argument_bits_and_bytes() -> None:
         get_args("Testing illegal arg combo", ["--bytes=69:", "--bits=69:"])
 
 
-def test_argument_mutant_and_mutants() -> None:
-    """Specifying both --mutant and --mutants raises exception."""
-    with pytest.raises(SystemExit):
-        get_args("Testing illegal arg combo", ["--mutant=foo", "--mutants=bar"])
-
-
-def test_argument_mutant() -> None:
-    """get_args understands --mutant."""
-    parser = get_args("Testing mutant", ["--mutant=/etc/bar"])
-    assert parser.mutant == "/etc/bar"
-    assert not parser.mutants
-
-
 def test_argument_mutants() -> None:
     """get_args understands --mutants."""
     parser = get_args("Testing mutants", ["--mutants=/etc"])
-    assert not parser.mutant
     assert str(parser.mutants) == "/etc"
-
-
-def test_argument_no_path() -> None:
-    """get_args understands no specified path."""
-    parser = get_args("Testing neither mutant nor mutants")
-    assert not parser.mutant
-    assert not parser.mutants
 
 
 def test_help() -> None:

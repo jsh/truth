@@ -103,16 +103,6 @@ def test_write_bad_dir() -> None:
         zoon.write(Path("/u/jane/me/tarzan"))
 
 
-def test_write_temp_file(tmp_path) -> None:
-    """Write to a temporary file."""
-    true = pwhich("true")
-    zoon = Zoon(true)
-    assert tmp_path.is_dir()
-    assert len(list(tmp_path.iterdir())) == 0
-    zoon.write(tmp_path)
-    assert len(list(tmp_path.iterdir())) == 1
-
-
 def test_mutate() -> None:
     """Mutate a bit in a Zoon."""
     zoon_0 = Zoon("00000000")
@@ -128,7 +118,7 @@ def test_run(tmp_path) -> None:
     expected = (0, "success", "", "")
     true = pwhich("true")
     zoon = Zoon(true)
-    assert zoon.run(tmp_path) == expected
+    assert zoon.run(tmp_path / "true") == expected
 
 
 def test_delete() -> None:

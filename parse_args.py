@@ -3,7 +3,7 @@
 
 import argparse
 import collections
-import sys
+import logging
 from pathlib import Path
 from typing import List, Optional, Tuple
 
@@ -47,17 +47,15 @@ def get_args(
     :rtype: argparse.Namespace
 
     When this finishes we return a Namespace that has these attributes
-      - verbose: how chatty to be (bool)
+      - debug: print everything
+      - verbose: print everything below debug
       - wild_type: path to executable being considered
         (e.g., "/usr/bin/true"). [Must exist.]
       - bit_size: size of wild_type, in bits (int)
       - byte_size: size of wild_type, in bytes (int)
       - bits: bit-range of interest (Span) [default: entire wild_type]
       - bytes: byte-range of interest (Span) [default: entire wild_type]
-      [Either mutant or mutants, not both]
-          - mutant: a filename for a mutant (str)
-          - mutants: a directory for mutants (str)
-      This is a little redundant, but it's convenient and simplifies other code.
+      - mutants: a directory for mutants (str) [default: mutants]
     """
     if args is None:
         args = []
@@ -66,7 +64,26 @@ def get_args(
 
     parser = argparse.ArgumentParser(description=description)
 
-    parser.add_argument("--verbose", help="be extra chatty", action="store_true")
+    parser.add_argument(
+        "-d",
+        "--debug",
+        help="Print DEBUG, INFO, WARNING, ERROR, CRITICAL",
+        action="store_const",
+        dest="loglevel",
+        const=logging.DEBUG,
+        default=logging.WARNING,
+    )
+    parser.add_argument(
+        "-i",
+        "-v",
+        "--info",
+        "--verbose",
+        help="Print a lot: INFO, WARNING, ERROR, CRITICAL",
+        action="store_const",
+        dest="loglevel",
+        const=logging.INFO,
+        default=logging.WARNING,  # WARNING, ERROR, CRITICAL
+    )
 
     parser.add_argument(
         "--wild_type",
@@ -74,10 +91,7 @@ def get_args(
         help="un-mutated executable (default: %(default)s)",
     )
 
-    mutant_or_mutants = parser.add_mutually_exclusive_group()
-    mutant_or_mutants.add_argument("--mutant", help="file to store mutant")
-    mutant_or_mutants.add_argument("--mutants", help="directory to store mutants")
-
+    parser.add_argument("--mutants", help="directory to store mutants")
     parser.add_argument("--cmd_args", help="args for the executable(s)")
 
     bits_or_bytes = parser.add_mutually_exclusive_group()
@@ -85,8 +99,9 @@ def get_args(
     bits_or_bytes.add_argument("--bytes", help="bytes(s) of interest", type=parsed_span)
 
     parsed_args = parser.parse_args(args)
-    if parsed_args.verbose:
-        print(parsed_args, file=sys.stderr)
+    # set up logging
+    logging.basicConfig(level=parsed_args.loglevel, format="%(message)s")
+    logging.debug(parsed_args)
 
     # attribute validatation and enhancement
     assert Path(parsed_args.wild_type).is_file(), f"No file {parsed_args.wild_type}"
