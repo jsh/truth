@@ -31,6 +31,8 @@ def survey_range(args) -> None:
     for bit in range(args.bits.start, args.bits.end):
         result = zoon.mutate_and_run(position=bit, dir_path=dir_path, cmd_args=cmd_args)
         report(result, bit)
+        if not args.save:
+            (dir_path / str(bit)).unlink()  # cleanliness is next to Godliness
 
 
 def report(result: RunResult, bit) -> None:

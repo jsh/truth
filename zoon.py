@@ -74,7 +74,6 @@ class Zoon:
         self, position: int, dir_path: Path, cmd_args: str = "", timeout: int = 1
     ) -> RunResult:
         """Mutate, then run.  Just what it sounds like."""
-        print(f"position: {position}")
         mutant = self.mutate(position)
         file_path = dir_path / str(position)
         return mutant.run(file_path, cmd_args, timeout)

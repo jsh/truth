@@ -16,6 +16,13 @@ def test_get_args_defaults() -> None:
     """get_args defaults."""
     parser = get_args("Testing default wild_type")
     assert parser.wild_type == pwhich("true")
+    assert not parser.save
+
+
+def test_save() -> None:
+    """get_args understands --save."""
+    parser = get_args("Testing bits", ["--save"])
+    assert parser.save
 
 
 def test_bits() -> None:

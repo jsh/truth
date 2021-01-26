@@ -65,7 +65,6 @@ def get_args(
     parser = argparse.ArgumentParser(description=description)
 
     parser.add_argument(
-        "-d",
         "--debug",
         help="Print DEBUG, INFO, WARNING, ERROR, CRITICAL",
         action="store_const",
@@ -74,8 +73,6 @@ def get_args(
         default=logging.WARNING,
     )
     parser.add_argument(
-        "-i",
-        "-v",
         "--info",
         "--verbose",
         help="Print a lot: INFO, WARNING, ERROR, CRITICAL",
@@ -84,6 +81,7 @@ def get_args(
         const=logging.INFO,
         default=logging.WARNING,  # WARNING, ERROR, CRITICAL
     )
+    parser.add_argument("--save", help="Save the mutant", action="store_true")
 
     parser.add_argument(
         "--wild_type",
