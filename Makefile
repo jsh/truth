@@ -1,6 +1,6 @@
 # The usual
 
-BANDIT_OPTIONS := -q -s B101  # don't warn about asserts
+BANDIT_OPTIONS := -q -s B101,B603  # don't warn about asserts
 NO_CLEAN := bin problems results
 PIPENV_PACKAGES := bandit isort mypy pycodestyle pydocstyle pyflakes pylama pylama_pylint pytest pytest-cov
 PYTEST_OPTIONS := -q --doctest-modules
@@ -47,7 +47,7 @@ pylint:
 requirements.txt: ${SOURCES} ${TESTS}
 	pip freeze > requirements.txt
 
-test:
+pytest test:
 	pytest ${PYTEST_OPTIONS}
 
-.PHONY: all bandit black coverage clean fixme isort lint mypy pipenv_setup pylama pylint test
+.PHONY: all bandit black coverage clean fixme isort lint mypy pipenv_setup pylama pylint pytest test

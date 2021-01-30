@@ -121,7 +121,9 @@ def bad_exe(tmpdir):
     src_file = str(tmpdir / "bad_src.h")
     exe_file = str(tmpdir / "bad_exe")
     open(src_file, "w").close()
-    subprocess.run(shlex.split(f"/usr/bin/cc {src_file} -o {exe_file}"))  # nosec
+    subprocess.run(
+        shlex.split(f"/usr/bin/cc {src_file} -o {exe_file}"), check=True
+    )  # nosec
     Path(exe_file).chmod(0o755)
     return exe_file
 
