@@ -9,7 +9,7 @@ import tempfile
 from pathlib import Path
 from typing import Tuple
 
-from parse_args import get_args
+from paramparse import ParamParser
 from zoon import Zoon
 
 RunResult = Tuple[int, str, str, str]
@@ -50,10 +50,8 @@ def main(argv: list) -> None:
     :param list argv: All the args. sys.argv
     """
 
-    args = get_args(
-        "Brute-force survey of point mutants, every site in a span.", argv[1:]
-    )
-    survey_range(args)
+    params = ParamParser(argv[1:])
+    survey_range(params)
 
 
 if __name__ == "__main__":

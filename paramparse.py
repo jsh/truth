@@ -75,7 +75,9 @@ def ParamParser(  # TODO: This should be a class, with a function  # pylint:disa
     """
     # TODO: update doc string
 
-    parser = argparse.ArgumentParser(description="Decompose sequence.")
+    parser = argparse.ArgumentParser(
+        description="Brute-force survey of point mutants, every site in a span."
+    )
     defaults = config_parser(config_files)
     parser.add_argument(
         "--debug",
