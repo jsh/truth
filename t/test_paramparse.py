@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Test param_parser() function."""
+"""Test parse_params() function."""
 
 import logging
 from pathlib import Path
@@ -8,9 +8,10 @@ from paramparse import ParamParser, Span
 from utils import pwhich
 
 
-def test_ParamParser_defaults() -> None:  # pylint:disable=invalid-name
+def test_defaults() -> None:
     """ParamParser defaults."""
-    params = ParamParser()
+    parser = ParamParser()
+    params = parser.parse_params()
     assert params.loglevel == logging.WARNING
     assert not params.save
     assert params.wild_type == pwhich("true")
@@ -23,44 +24,51 @@ def test_ParamParser_defaults() -> None:  # pylint:disable=invalid-name
 
 
 def test_verbose() -> None:
-    """ParamParser understands --verbose."""
-    params = ParamParser(["--verbose"])
+    """parse_param() understands --verbose."""
+    parser = ParamParser()
+    params = parser.parse_params(["--verbose"])
     assert params.loglevel == logging.INFO
 
 
 def test_debug() -> None:
-    """ParamParser understands --debug."""
-    params = ParamParser(["--debug"])
+    """parse_param() understands --debug."""
+    parser = ParamParser()
+    params = parser.parse_params(["--debug"])
     assert params.loglevel == logging.DEBUG
 
 
 def test_save() -> None:
-    """ParamParser understands --save."""
-    params = ParamParser(["--save"])
+    """parse_param() understands --save."""
+    parser = ParamParser()
+    params = parser.parse_params(["--save"])
     assert params.save
 
 
 def test_wild_type() -> None:
-    """ParamParser understands --wild_type."""
-    params = ParamParser(["--wild_type=/etc/passwd"])
+    """parse_param() understands --wild_type."""
+    parser = ParamParser()
+    params = parser.parse_params(["--wild_type=/etc/passwd"])
     assert params.wild_type == "/etc/passwd"
 
 
 def test_mutants() -> None:
-    """ParamParser understands --mutants."""
-    params = ParamParser(["--mutants=foo"])
+    """parse_param() understands --mutants."""
+    parser = ParamParser()
+    params = parser.parse_params(["--mutants=foo"])
     assert params.mutants == "foo"
 
 
 def test_bits() -> None:
-    """ParamParser understands --bits."""
-    params = ParamParser(["--bits=3:5"])
+    """parse_param() understands --bits."""
+    parser = ParamParser()
+    params = parser.parse_params(["--bits=3:5"])
     assert params.bits == Span(start=3, end=5)
 
 
 def test_bytes() -> None:
-    """ParamParser understands --bytes."""
-    params = ParamParser(["--bytes=6:9"])
+    """parse_param() understands --bytes."""
+    parser = ParamParser()
+    params = parser.parse_params(["--bytes=6:9"])
     assert params.bytes == Span(start=6, end=9)
 
 
