@@ -50,7 +50,8 @@ def main(argv: list) -> None:
     :param list argv: All the args. sys.argv
     """
 
-    params = ParamParser(argv[1:])
+    parser = ParamParser()
+    params = parser.parse_params(argv[1:])
     survey_range(params)
 
 

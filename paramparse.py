@@ -61,6 +61,7 @@ def config_parser(configfiles):
 
 class ParamParser:
     """Class docstring."""
+
     def __init__(self) -> None:
         pass
 
@@ -81,7 +82,7 @@ class ParamParser:
         parser = argparse.ArgumentParser(
             description="Brute-force survey of point mutants, every site in a span."
         )
-        config_files=[SYSTEM_CONFIG, GLOBAL_CONFIG, LOCAL_CONFIG]
+        config_files = [SYSTEM_CONFIG, GLOBAL_CONFIG, LOCAL_CONFIG]
         defaults = config_parser(config_files)
         parser.add_argument(
             "--debug",
@@ -114,8 +115,12 @@ class ParamParser:
         )  # TODO: should this default to ""?
 
         bits_or_bytes = parser.add_mutually_exclusive_group()
-        bits_or_bytes.add_argument("--bits", help="bit(s) of interest", type=parsed_span)
-        bits_or_bytes.add_argument("--bytes", help="bytes(s) of interest", type=parsed_span)
+        bits_or_bytes.add_argument(
+            "--bits", help="bit(s) of interest", type=parsed_span
+        )
+        bits_or_bytes.add_argument(
+            "--bytes", help="bytes(s) of interest", type=parsed_span
+        )
 
         if args is None:
             args = []
