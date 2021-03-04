@@ -13,7 +13,6 @@ def test_defaults() -> None:
     parser = ParamParser()
     params = parser.parse_params()
     assert params.loglevel == logging.WARNING
-    assert not params.save
     assert params.wild_type == pwhich("true")
     assert not params.mutants
     assert not params.cmd_args
@@ -37,18 +36,11 @@ def test_debug() -> None:
     assert params.loglevel == logging.DEBUG
 
 
-def test_save() -> None:
-    """parse_param() understands --save."""
-    parser = ParamParser()
-    params = parser.parse_params(["--save"])
-    assert params.save
-
-
 def test_wild_type() -> None:
     """parse_param() understands --wild_type."""
     parser = ParamParser()
     params = parser.parse_params(["--wild_type=/etc/passwd"])
-    assert params.wild_type == "/etc/passwd"
+    assert params.wild_type == Path("/etc/passwd")
 
 
 def test_mutants() -> None:

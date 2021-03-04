@@ -128,7 +128,8 @@ class ParamParser:
         logging.debug(params)
 
         # attribute validatation and enhancement
-        assert Path(params.wild_type).is_file(), f"No file {params.wild_type}"
+        params.wild_type = Path(params.wild_type)  # convert to a path
+        assert params.wild_type.is_file(), f"No file {params.wild_type}"
 
         # bits and bytes
         params.size_in_bytes = Path(params.wild_type).stat().st_size
