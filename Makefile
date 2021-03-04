@@ -7,9 +7,9 @@ PYTEST_OPTIONS := -q --doctest-modules
 SOURCES := $(wildcard *.py)
 TESTS := $(wildcard t/*.py)
 
-all: lint security test
+all: lint test
 
-bandit:
+bandit security:
 	bandit ${BANDIT_OPTIONS} ${SOURCES} ${TESTS}
 
 black: isort
@@ -46,8 +46,5 @@ pylint:
 
 pytest test:
 	pytest ${PYTEST_OPTIONS}
-
-security: bandit
-	pipenv check
 
 .PHONY: all bandit black coverage clean fixme isort lint mypy pipenv_setup pylama pylint pytest security test
