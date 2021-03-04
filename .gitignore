@@ -130,7 +130,8 @@ dmypy.json
 
 
 # My own additions
+*.swp
+bin
+mutants
 problems
 results
-bin
-*.swp
