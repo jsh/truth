@@ -71,7 +71,6 @@ class ParamParser:
 
         When this finishes we return a Namespace that has these attributes
           - loglevel: how much info to log
-          - save: save the mutants
           - mutants: directory for mutants
           - cmd_args: command arguments
           - bits: bit range
@@ -101,7 +100,6 @@ class ParamParser:
             const=logging.INFO,
             default=logging.WARNING,  # WARNING, ERROR, CRITICAL
         )
-        parser.add_argument("--save", help="Save the mutant", action="store_true")
         parser.add_argument(
             "--wild_type",
             default=defaults.wild_type,
