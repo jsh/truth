@@ -7,7 +7,7 @@ PYTEST_OPTIONS := -q --doctest-modules
 SOURCES := $(wildcard *.py)
 TESTS := $(wildcard t/*.py)
 
-all: lint test requirements.txt
+all: lint test
 
 bandit:
 	bandit ${BANDIT_OPTIONS} ${SOURCES} ${TESTS}
@@ -43,9 +43,6 @@ pylama:
 
 pylint:
 	pylint --rcfile=.config/pylint -rn ${SOURCES} ${TESTS} | sort -t: -k2 -n -r
-
-requirements.txt: ${SOURCES} ${TESTS}
-	pip freeze > requirements.txt
 
 pytest test:
 	pytest ${PYTEST_OPTIONS}
