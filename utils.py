@@ -1,13 +1,33 @@
-#!/usr/bin/env python3
+#!/usr/bin/env pypy3
 """Miscellaneous utility routines."""
 
-import collections
-import re
 import shutil
 import sys
 from pathlib import Path
 
-Span = collections.namedtuple("Span", "start end")
+
+def make_range(indices: str = ":", upper_fence: int = sys.maxsize):
+    """Make a range from a colon-separated string of ints."""
+    pieces = [int(index) if index else None for index in indices.split(":")]
+    if not pieces[0]:
+        pieces[0] = 0
+    if not pieces[-1]:
+        pieces[-1] = upper_fence
+    if len(pieces) == 1:
+        return range(pieces[0], pieces[0] + 1)  # type: ignore
+    return range(*pieces)  # type: ignore
+
+
+def pwhich(command: str) -> Path:
+    """Path to given command.
+
+    shutil.which only returns a string.
+    :returns: Path to command
+    :rtype: pathlib.Path
+    """
+    path_str = shutil.which(command)
+    assert path_str, f"{command} not found"
+    return Path(path_str)
 
 
 def to_bytes(binary_string: str) -> bytes:
@@ -39,40 +59,3 @@ def toggle_bit_in_byte(offset: int, byte: int) -> int:
     assert 0 <= byte < 256
     mask = 1 << offset
     return byte ^ mask
-
-
-def pwhich(command: str) -> Path:
-    """Path to given command.
-
-    shutil.which only returns a string.
-    :returns: Path to command
-    :rtype: pathlib.Path
-    """
-    path_str = shutil.which(command)
-    assert path_str, f"{command} not found"
-    return Path(path_str)
-
-
-def parsed_span(span: str) -> Span:
-    """parse a span
-    :param str bit: range specified
-    :returns: beginning and end of span
-    :rtype: tuple(int, int)
-    """
-
-    if not span:
-        span = "0:"  # the entire sequence
-    elif re.fullmatch(r"-?\d+", span):
-        return Span(start=int(span), end=int(span) + 1)
-    span_pat = r"(-?\d*):(-?\d*)"
-    match = re.fullmatch(span_pat, span)
-    if match:
-        # pull apart "left:right", turn into start and end of range
-        left = match.group(1)
-        if not left:
-            left = "0"
-        start = int(left)
-        right = match.group(2)
-        end = int(right) if right else sys.maxsize
-        return Span(start=start, end=end)
-    raise TypeError("--bit argument must be a colon-separated range or a single int")

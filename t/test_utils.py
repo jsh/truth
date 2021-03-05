@@ -6,7 +6,7 @@ import sys
 
 import pytest
 
-from utils import parsed_span, pwhich, to_bytes, toggle_bit_in_byte
+from utils import make_range, pwhich, to_bytes, toggle_bit_in_byte
 
 
 def test_pwhich() -> None:
@@ -58,15 +58,13 @@ def test_toggle_bit_in_int() -> None:
         toggle_bit_in_byte(0, 256)
 
 
-def test_parsed_span() -> None:
-    """parsed_span handles all five span types."""
-    assert (0, sys.maxsize) == parsed_span("")
-    assert (69, 70) == parsed_span("69")
-    assert (6, 9) == parsed_span("6:9")
-    assert (69, sys.maxsize) == parsed_span("69:")
-    assert (0, 69) == parsed_span(":69")
-    assert (0, sys.maxsize) == parsed_span(":")
-    # TODO: need a mock to set args.size
-
-    with pytest.raises(TypeError):
-        parsed_span("xxx")
+def test_make_range() -> None:
+    """make_range handles all five span types."""
+    upper_fence = sys.maxsize
+    assert range(0, upper_fence) == make_range()
+    assert range(69, 70) == make_range("69")
+    assert range(6, 9) == make_range("6:9")
+    assert range(69, sys.maxsize) == make_range("69:")
+    assert range(0, 69) == make_range(":69")
+    assert range(0, 5) == make_range(":", 5)
+    assert range(2, 0, -1) == make_range("2:0:-1")

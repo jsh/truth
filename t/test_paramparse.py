@@ -4,7 +4,7 @@
 import logging
 from pathlib import Path
 
-from paramparse import ParamParser, Span
+from paramparse import ParamParser
 from utils import pwhich
 
 
@@ -16,10 +16,7 @@ def test_defaults() -> None:
     assert params.wild_type == pwhich("true")
     assert not params.mutants
     assert not params.cmd_args
-    assert params.size_in_bytes == Path(params.wild_type).stat().st_size
-    assert params.size_in_bits == params.size_in_bytes * 8
-    assert params.bits == Span(start=0, end=params.size_in_bits)
-    assert params.bytes == Span(start=0, end=params.size_in_bytes)
+    assert not params.bits
 
 
 def test_verbose() -> None:
@@ -46,22 +43,15 @@ def test_wild_type() -> None:
 def test_mutants() -> None:
     """parse_param() understands --mutants."""
     parser = ParamParser()
-    params = parser.parse_params(["--mutants=foo"])
-    assert params.mutants == "foo"
+    params = parser.parse_params(["--mutants=foobarmumble"])
+    assert params.mutants == "foobarmumble"
 
 
 def test_bits() -> None:
     """parse_param() understands --bits."""
     parser = ParamParser()
     params = parser.parse_params(["--bits=3:5"])
-    assert params.bits == Span(start=3, end=5)
-
-
-def test_bytes() -> None:
-    """parse_param() understands --bytes."""
-    parser = ParamParser()
-    params = parser.parse_params(["--bytes=6:9"])
-    assert params.bytes == Span(start=6, end=9)
+    assert params.bits == "3:5"
 
 
 def test_help() -> None:

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env pypy3
 """Run an executable
 1 - Catchall for general errors
 2 - Misuse of shell builtins (according to Bash documentation)

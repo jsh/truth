@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env pypy3
 """Drive the truth."""
 
 import atexit
@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Tuple
 
 from paramparse import ParamParser
+from utils import make_range
 from zoon import Zoon
 
 RunResult = Tuple[int, str, str, str]
@@ -28,7 +29,7 @@ def survey_range(args) -> None:
         tempdir = tempfile.mkdtemp()  # use a temporary directory, then cleanup
         atexit.register(shutil.rmtree, tempdir)
         dir_path = Path(tempdir)
-    for bit in range(args.bits.start, args.bits.end):
+    for bit in make_range(args.bits, args.wild_type.stat().st_size):
         result = zoon.mutate_and_run(position=bit, dir_path=dir_path, cmd_args=cmd_args)
         report(result, bit)
         if not args.mutants:
