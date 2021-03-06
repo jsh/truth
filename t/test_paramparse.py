@@ -12,7 +12,7 @@ def test_defaults() -> None:
     """ParamParser defaults."""
     parser = ParamParser()
     params = parser.parse_params()
-    assert params.loglevel == logging.WARNING
+    assert params.loglevel == logging.ERROR
     assert params.wild_type == pwhich("true")
     assert not params.mutants
     assert not params.cmd_args

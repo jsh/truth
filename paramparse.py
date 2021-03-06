@@ -63,7 +63,7 @@ class ParamParser:
             action="store_const",
             dest="loglevel",
             const=logging.DEBUG,
-            default=logging.WARNING,
+            default=logging.ERROR,
         )
         parser.add_argument(
             "--info",
@@ -72,7 +72,7 @@ class ParamParser:
             action="store_const",
             dest="loglevel",
             const=logging.INFO,
-            default=logging.WARNING,  # WARNING, ERROR, CRITICAL
+            default=logging.ERROR,  # WARNING, ERROR, CRITICAL
         )
         parser.add_argument(
             "--wild_type",
