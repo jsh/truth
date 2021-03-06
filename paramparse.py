@@ -34,69 +34,65 @@ def config_parser(configfiles):
     return configs
 
 
-class ParamParser:
-    """Class docstring."""
+def parse_params(args=None) -> argparse.Namespace:
+    """Get the params
+       Precedence is defaults < config files < cmdline
 
-    def __init__(self) -> None:
-        pass
+    When this finishes we return a Namespace that has these attributes
+      - loglevel: how much info to log
+      - mutants: directory for mutants
+      - cmd_args: command arguments
+      - bits: bit range
+    """
+    # TODO: update doc string
 
-    def parse_params(self, args=None) -> argparse.Namespace:
-        """Get the params
-           Precedence is defaults < config files < cmdline
+    parser = argparse.ArgumentParser(
+        description="Brute-force survey of point mutants, every site in a span."
+    )
+    config_files = [SYSTEM_CONFIG, GLOBAL_CONFIG, LOCAL_CONFIG]
+    defaults = config_parser(config_files)
+    parser.add_argument(
+        "--debug",
+        help="Print DEBUG, INFO, WARNING, ERROR, CRITICAL",
+        action="store_const",
+        dest="loglevel",
+        const=logging.DEBUG,
+        default=logging.ERROR,
+    )
+    parser.add_argument(
+        "--info",
+        "--verbose",
+        help="Print a lot: INFO, WARNING, ERROR, CRITICAL",
+        action="store_const",
+        dest="loglevel",
+        const=logging.INFO,
+        default=logging.ERROR,  # WARNING, ERROR, CRITICAL
+    )
+    parser.add_argument(
+        "--wild_type",
+        default=defaults.wild_type,
+        help="un-mutated executable (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--mutants", help="directory to store mutants"
+    )  # TODO: should this default to "mutants"?
+    parser.add_argument(
+        "--cmd_args", help="args for the executable(s)"
+    )  # TODO: should this default to ""?
 
-        When this finishes we return a Namespace that has these attributes
-          - loglevel: how much info to log
-          - mutants: directory for mutants
-          - cmd_args: command arguments
-          - bits: bit range
-        """
-        # TODO: update doc string
+    mutants = parser.add_mutually_exclusive_group()
+    mutants.add_argument("--bit_range", help="range of bits of interest")
+    mutants.add_argument("--bits_file", help="file containing bit(s) of interest")
 
-        parser = argparse.ArgumentParser(
-            description="Brute-force survey of point mutants, every site in a span."
-        )
-        config_files = [SYSTEM_CONFIG, GLOBAL_CONFIG, LOCAL_CONFIG]
-        defaults = config_parser(config_files)
-        parser.add_argument(
-            "--debug",
-            help="Print DEBUG, INFO, WARNING, ERROR, CRITICAL",
-            action="store_const",
-            dest="loglevel",
-            const=logging.DEBUG,
-            default=logging.ERROR,
-        )
-        parser.add_argument(
-            "--info",
-            "--verbose",
-            help="Print a lot: INFO, WARNING, ERROR, CRITICAL",
-            action="store_const",
-            dest="loglevel",
-            const=logging.INFO,
-            default=logging.ERROR,  # WARNING, ERROR, CRITICAL
-        )
-        parser.add_argument(
-            "--wild_type",
-            default=defaults.wild_type,
-            help="un-mutated executable (default: %(default)s)",
-        )
-        parser.add_argument(
-            "--mutants", help="directory to store mutants"
-        )  # TODO: should this default to "mutants"?
-        parser.add_argument(
-            "--cmd_args", help="args for the executable(s)"
-        )  # TODO: should this default to ""?
+    if args is None:
+        args = []
+    params = parser.parse_args(args)
+    # set up logging
+    logging.basicConfig(level=params.loglevel, format="%(message)s")
+    logging.debug(params)
 
-        parser.add_argument("--bits", help="bit(s) of interest")
+    # attribute validatation
+    params.wild_type = Path(params.wild_type)  # convert to a path
+    assert params.wild_type.is_file(), f"No file {params.wild_type}"
 
-        if args is None:
-            args = []
-        params = parser.parse_args(args)
-        # set up logging
-        logging.basicConfig(level=params.loglevel, format="%(message)s")
-        logging.debug(params)
-
-        # attribute validatation
-        params.wild_type = Path(params.wild_type)  # convert to a path
-        assert params.wild_type.is_file(), f"No file {params.wild_type}"
-
-        return params
+    return params

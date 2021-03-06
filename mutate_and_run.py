@@ -7,9 +7,9 @@ import shutil
 import sys
 import tempfile
 from pathlib import Path
-from typing import Tuple
+from typing import List, Tuple, Union
 
-from paramparse import ParamParser
+from paramparse import parse_params
 from utils import make_range
 from zoon import Zoon
 
@@ -20,6 +20,7 @@ def survey_range(params) -> None:
     """Mutatate the wild type at each bit in a range and capture the results.
     :param args.Namespace params: All the args
     """
+    bits: Union[range, List[int]]
     zoon = Zoon(params.wild_type)
     cmd_args = params.cmd_args
     if params.mutants:  # name the directory
@@ -29,7 +30,14 @@ def survey_range(params) -> None:
         tempdir = tempfile.mkdtemp()  # use a temporary directory, then cleanup
         atexit.register(shutil.rmtree, tempdir)
         dir_path = Path(tempdir)
-    for bit in make_range(params.bits, params.wild_type.stat().st_size):
+    if params.bits_file:
+        with open(params.bits_file) as infile:
+            bits = [int(bit) for bit in infile]
+    elif params.bit_range:
+        bits = make_range(params.bit_range, params.wild_type.stat().st_size)
+    else:
+        bits = range(params.wild_type.stat().st_size)
+    for bit in bits:
         result = zoon.mutate_and_run(position=bit, dir_path=dir_path, cmd_args=cmd_args)
         if params.loglevel > logging.WARNING:
             print(f"{bit}\t{result[0]}")
@@ -43,8 +51,7 @@ def main(argv: list) -> None:
     :param list argv: All the args. sys.argv
     """
 
-    parser = ParamParser()
-    params = parser.parse_params(argv[1:])
+    params = parse_params(argv[1:])
     survey_range(params)
 
 
