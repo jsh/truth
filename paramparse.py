@@ -52,6 +52,7 @@ def parse_params(args=None) -> argparse.Namespace:
     config_files = [SYSTEM_CONFIG, GLOBAL_CONFIG, LOCAL_CONFIG]
     defaults = config_parser(config_files)
     parser.add_argument(
+        "-d",
         "--debug",
         help="Print DEBUG, INFO, WARNING, ERROR, CRITICAL",
         action="store_const",
@@ -60,6 +61,7 @@ def parse_params(args=None) -> argparse.Namespace:
         default=logging.ERROR,
     )
     parser.add_argument(
+        "-i",
         "--info",
         "--verbose",
         help="Print a lot: INFO, WARNING, ERROR, CRITICAL",
@@ -69,7 +71,7 @@ def parse_params(args=None) -> argparse.Namespace:
         default=logging.ERROR,  # WARNING, ERROR, CRITICAL
     )
     parser.add_argument(
-        "--wild_type",
+        "--wild_type", "--wt",
         default=defaults.wild_type,
         help="un-mutated executable (default: %(default)s)",
     )
@@ -81,8 +83,8 @@ def parse_params(args=None) -> argparse.Namespace:
     )  # TODO: should this default to ""?
 
     mutants = parser.add_mutually_exclusive_group()
-    mutants.add_argument("--bit_range", help="range of bits of interest")
-    mutants.add_argument("--bits_file", help="file containing bit(s) of interest")
+    mutants.add_argument("--bit_range", "--bits", "--bit", "-r", "-b", help="bit or range of bits of interest")
+    mutants.add_argument("--bit_file", "--file", "-f", help="file containing bit(s) of interest")
 
     if args is None:
         args = []

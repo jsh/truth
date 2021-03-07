@@ -30,8 +30,8 @@ def survey_range(params) -> None:
         tempdir = tempfile.mkdtemp()  # use a temporary directory, then cleanup
         atexit.register(shutil.rmtree, tempdir)
         dir_path = Path(tempdir)
-    if params.bits_file:
-        with open(params.bits_file) as infile:
+    if params.bit_file:
+        with open(params.bit_file) as infile:
             bits = [int(bit) for bit in infile]
     elif params.bit_range:
         bits = make_range(params.bit_range, params.wild_type.stat().st_size)
