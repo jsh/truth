@@ -1,10 +1,1 @@
-The file "point-mutants" was a several-day run of the "mutate-and-run.py" in this branch.
-"The file "failures" is everything that didn't return success.
-
-Some timeouts were because an idiot (that would be me) forgot it was running in the background and closed the laptop.
-All timeouts from that run are in "timeouts1"
-When I rerun these, I get timeouts1-rerun, which reveals which timeouts are real timeouts (timeouts2),
-and which ones are not. The ones that aren't timeouts all succeed.
-
-Clearly, the code needs to be cleaned up and sped up, but this is a good piton to drive into the wall,
-so I'll tag it to make sure it doesn't get lost.
+The file "point-mutants" was a several-day run of the "mutate-and-run.py" in this branch with false-timeouts corrected to success.
