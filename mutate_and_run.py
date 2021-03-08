@@ -40,7 +40,7 @@ def survey_range(params) -> None:
     for bit in bits:
         result = zoon.mutate_and_run(position=bit, dir_path=dir_path, cmd_args=cmd_args)
         if params.loglevel > logging.WARNING:
-            print(f"{bit}\t{result[0]}")
+            print(f"{bit}\t{result[0]}", flush=True)
         logging.warning("mutant at bit %d: %s", bit, result)
         if not params.mutants:
             (dir_path / str(bit)).unlink()  # cleanliness is next to Godliness
