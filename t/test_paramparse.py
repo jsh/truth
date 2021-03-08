@@ -3,6 +3,7 @@
 
 import logging
 from pathlib import Path
+
 import pytest
 
 from paramparse import parse_params
@@ -59,7 +60,7 @@ def test_bit_file() -> None:
 def test_range_and_file() -> None:
     """parse_param() understands --bit_range and --bit_file are mutually exclusive.."""
     with pytest.raises(SystemExit):
-        params = parse_params(["--bit_file=/etc/passwd", "--bit_range=1:2"])
+        parse_params(["--bit_file=/etc/passwd", "--bit_range=1:2"])
 
 
 def test_help() -> None:
