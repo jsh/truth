@@ -17,7 +17,7 @@ def test_defaults() -> None:
     assert not params.mutants
     assert not params.cmd_args
     assert not params.bit_range
-    assert not params.bits_file
+    assert not params.bit_file
 
 
 def test_verbose() -> None:
@@ -50,16 +50,16 @@ def test_bit_range() -> None:
     assert params.bit_range == "3:5"
 
 
-def test_bits_file() -> None:
+def test_bit_file() -> None:
     """parse_param() understands --bit_range."""
-    params = parse_params(["--bits_file=/etc/passwd"])
-    assert params.bits_file == "/etc/passwd"
+    params = parse_params(["--bit_file=/etc/passwd"])
+    assert params.bit_file == "/etc/passwd"
 
 
 def test_range_and_file() -> None:
-    """parse_param() understands --bit_range and --bits_file are mutually exclusive.."""
+    """parse_param() understands --bit_range and --bit_file are mutually exclusive.."""
     with pytest.raises(SystemExit):
-        params = parse_params(["--bits_file=/etc/passwd", "--bit_range=1:2"])
+        params = parse_params(["--bit_file=/etc/passwd", "--bit_range=1:2"])
 
 
 def test_help() -> None:
