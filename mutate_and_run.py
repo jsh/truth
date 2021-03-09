@@ -34,7 +34,7 @@ def survey_range(params) -> None:
         with open(params.bit_file) as infile:
             bits = [int(bit) for bit in infile]
     elif params.bit_range:
-        bits = make_range(params.bit_range, 8*params.wild_type.stat().st_size)
+        bits = make_range(params.bit_range, 8 * params.wild_type.stat().st_size)
     else:
         bits = range(params.wild_type.stat().st_size)
     for bit in bits:
