@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 
-def make_range(indices: str = ":", upper_fence: int = sys.maxsize):
+def make_range(indices: str = ":", upper_fence: int = 8*sys.maxsize):
     """Make a range from a colon-separated string of ints."""
     pieces = [int(index) if index else None for index in indices.split(":")]
     if not pieces[0]:
